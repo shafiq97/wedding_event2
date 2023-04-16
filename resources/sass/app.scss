@@ -1,0 +1,28 @@
+/**
+ * Frontend styles via Bootstrap Framework.
+ */
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/font-awesome/scss/font-awesome.scss";
+@import "node_modules/font-awesome/css/font-awesome.css";
+
+/**
+ * Icons via Font Awesome.
+ */
+$fa-font-path: "/lib";
+@import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "node_modules/@fortawesome/fontawesome-free/scss/solid";
+
+/*
+ * Classes for column-count
+ */
+@each $columnCount in [2, 3, 4] {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+      .cols#{$infix}-#{$columnCount} {
+        column-count: #{$columnCount};
+      }
+    }
+  }
+}
