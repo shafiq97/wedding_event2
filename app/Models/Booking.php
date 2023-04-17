@@ -11,10 +11,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\QueryException;
 use Spatie\QueryBuilder\AllowedFilter;
 
 /**
  * @property-read int $id
+ * @property int $venue_id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -52,6 +54,7 @@ class Booking extends Model
         'booked_at',
         'paid_at',
         'comment',
+        'venue_id',
     ];
 
     /**
@@ -60,7 +63,7 @@ class Booking extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'booked_at' => 'datetime',
+        'booked_at' => 'date',
         'paid_at' => 'datetime',
     ];
 
@@ -79,7 +82,7 @@ class Booking extends Model
     public function formFieldValues(): HasMany
     {
         return $this->hasMany(FormFieldValue::class)
-                    ->with('formField');
+            ->with('formField');
     }
 
     public function scopePaymentStatus(Builder $query, int|PaymentStatus $paymentStatus)
@@ -95,34 +98,45 @@ class Booking extends Model
         };
     }
 
-    public function scopeSearchAll(Builder $query, string ...$searchTerms): Builder
+    public function scopeSearchAll(Builder $query, string...$searchTerms): Builder
     {
         return $this->scopeIncludeColumns($query, ['first_name', 'last_name'], true, ...$searchTerms);
     }
 
+
+
     public function fillAndSave(array $validatedData): bool
     {
-        if (!$this->fill($validatedData)->save()) {
-            return false;
-        }
+        try {
+            if (!$this->fill($validatedData)->save()) {
+                return false;
+            }
 
-        foreach ($this->bookingOption->form->formFieldGroups ?? [] as $group) {
-            foreach ($group->formFields as $field) {
-                if (!isset($field->column)) {
-                    if (!$this->setFieldValue($field, $validatedData[$field->input_name] ?? null)) {
-                        return false;
+            foreach ($this->bookingOption->form->formFieldGroups ?? [] as $group) {
+                foreach ($group->formFields as $field) {
+                    if (!isset($field->column)) {
+                        if (!$this->setFieldValue($field, $validatedData[$field->input_name] ?? null)) {
+                            return false;
+                        }
                     }
                 }
             }
-        }
 
-        return true;
+            return true;
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) { // 1062 is the error code for duplicate entry
+                // handle the duplicate entry error here
+                return false;
+            }
+            throw $e;
+        }
     }
+
 
     public function setFieldValue(FormField $formField, mixed $value): bool
     {
         $formFieldValue = $this->formFieldValues->loadMissing(['formField'])->first(
-            static fn (FormFieldValue $existingFormFieldValue) => $existingFormFieldValue->formField->is($formField)
+            static fn(FormFieldValue $existingFormFieldValue) => $existingFormFieldValue->formField->is($formField)
         );
 
         if ($formFieldValue === null) {
@@ -145,8 +159,8 @@ class Booking extends Model
         /** @var ?FormFieldValue $fieldValue */
         $fieldValue = $this->formFieldValues
             ->first(
-                static fn (FormFieldValue $formFieldValue) => $formFieldValue->formField->column === null
-                    && $formFieldValue->formField->is($formField)
+                static fn(FormFieldValue $formFieldValue) => $formFieldValue->formField->column === null
+                && $formFieldValue->formField->is($formField)
             );
         if ($fieldValue) {
             return $fieldValue->getRealValue();

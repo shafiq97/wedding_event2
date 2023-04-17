@@ -81,6 +81,14 @@
         <x-form.input name="email" type="email"
                       :value="$booking->email ?? null"/>
     </x-form.row>
+    <x-form.row>
+        <x-form.label for="bookingDateFrom">{{ __('Booking Date From') }}</x-form.label>
+        <x-form.input name="bookingDateFrom" type="date"/>
+    </x-form.row>
+    <x-form.row>
+        <x-form.label for="bookingDateUntil">{{ __('Booking Date Until') }}</x-form.label>
+        <x-form.input name="bookingDateUntil" type="date"/>
+    </x-form.row>
 
     @include('_shared.address_fields_form', [
         'address' => $booking,

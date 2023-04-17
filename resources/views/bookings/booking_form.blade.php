@@ -15,9 +15,11 @@
 @section('breadcrumbs')
     <x-nav.breadcrumb href="{{ route('events.index') }}">{{ __('Events') }}</x-nav.breadcrumb>
     <x-nav.breadcrumb href="{{ route('events.show', $service) }}">{{ $service->name }}</x-nav.breadcrumb>
-    <x-nav.breadcrumb href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ $bookingOption->name }}</x-nav.breadcrumb>
+    <x-nav.breadcrumb href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ $bookingOption->name }}
+    </x-nav.breadcrumb>
     @can('viewAny', \App\Models\Booking::class)
-        <x-nav.breadcrumb href="{{ route('bookings.index', [$service, $bookingOption]) }}">{{ __('Bookings') }}</x-nav.breadcrumb>
+        <x-nav.breadcrumb href="{{ route('bookings.index', [$service, $bookingOption]) }}">{{ __('Bookings') }}
+        </x-nav.breadcrumb>
     @endcan
 @endsection
 
@@ -40,8 +42,7 @@
                             <div class="col-12 col-md-6">
                                 <x-form.row>
                                     <x-form.label for="comment">{{ __('Comment') }}</x-form.label>
-                                    <x-form.input name="comment" type="textarea"
-                                                  :value="$booking->comment ?? null"/>
+                                    <x-form.input name="comment" type="textarea" :value="$booking->comment ?? null" />
                                 </x-form.row>
                             </div>
                         @endcan
@@ -49,8 +50,7 @@
                             <div class="col-12 col-md-6">
                                 <x-form.row>
                                     <x-form.label for="paid_at">{{ __('Paid at') }}</x-form.label>
-                                    <x-form.input name="paid_at" type="datetime-local"
-                                                  :value="$booking->paid_at ?? null"/>
+                                    <x-form.input name="paid_at" type="datetime-local" :value="$booking->paid_at ?? null" />
                                 </x-form.row>
                             </div>
                         @endcan
@@ -65,16 +65,16 @@
                 <x-button.group>
                     <x-button.save>
                         @isset($booking)
-                            {{ __( 'Save' ) }}
+                            {{ __('Save') }}
                         @else
                             {{ __('Create') }}
                         @endisset
                     </x-button.save>
-                    <x-button.cancel href="{{ route('bookings.index', [$service, $bookingOption]) }}"/>
+                    <x-button.cancel href="{{ route('bookings.index', [$service, $bookingOption]) }}" />
                 </x-button.group>
             </x-form>
         </div>
     </div>
 
-    <x-text.timestamp :model="$booking ?? null"/>
+    <x-text.timestamp :model="$booking ?? null" />
 @endsection

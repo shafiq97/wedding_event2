@@ -104,6 +104,11 @@ class Venue extends Model
             ->orderBy('finished_at');
     }
 
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function fillAndSave(array $validatedData): bool
     {
         $this->fill($validatedData);

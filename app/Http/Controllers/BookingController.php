@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -65,7 +66,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function store(Venue $service, BookingOption $bookingOption, BookingRequest $request): RedirectResponse
+    public function store(Venue $venue, BookingOption $bookingOption, BookingRequest $request): RedirectResponse
     {
         $this->authorize('book', $bookingOption);
 
@@ -73,7 +74,9 @@ class BookingController extends Controller
         $booking->bookingOption()->associate($bookingOption);
         $booking->price = $bookingOption->price;
         $booking->bookedByUser()->associate(Auth::user());
-        $booking->booked_at = Carbon::now();
+        $booking->booked_at = Carbon::now()->toDate();
+        $booking->venue_id = $venue->id;
+
 
         if ($booking->fillAndSave($request->validated())) {
             $message = __('Your booking has been saved successfully.')
@@ -89,6 +92,9 @@ class BookingController extends Controller
             if (Auth::user()?->can('view', $booking)) {
                 return redirect(route('bookings.show', $booking));
             }
+        }else{
+            $message = __('Booking has been made on this the choosen date for the venue.');
+            Session::flash('error', $message);
         }
 
         return back();

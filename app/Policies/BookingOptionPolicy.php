@@ -45,20 +45,21 @@ class BookingOptionPolicy
 
     public function book(?User $user, BookingOption $bookingOption): Response
     {
-        // if (
-        //     !isset($bookingOption->available_from)
-        //     || $bookingOption->available_from->isFuture()
-        // ) {
-        //     return $this->deny(__('Bookings are not possible yet.'));
-        // }
+        if (
+            !isset($bookingOption->available_from)
+            || $bookingOption->available_from->isFuture()
+        ) {
+            return $this->deny(__('Bookings are not possible yet.'));
+        }
 
-        // if (isset($bookingOption->available_until) && $bookingOption->available_until->isPast()) {
-        //     return $this->deny(
-        //         __('The booking period ended at :date.', ['date' => formatDateTime($bookingOption->available_until)])
-        //         . ' '
-        //         . __('Bookings are not possible anymore.')
-        //     );
-        // }
+
+        if (isset($bookingOption->available_until) && $bookingOption->available_until->isPast()) {
+            return $this->deny(
+                __('The booking period ended at :date.', ['date' => formatDateTime($bookingOption->available_until)])
+                . ' '
+                . __('Bookings are not possible anymore.')
+            );
+        }
 
         if ($bookingOption->hasReachedMaximumBookings()) {
             return $this->deny(

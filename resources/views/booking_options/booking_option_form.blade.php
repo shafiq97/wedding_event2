@@ -67,16 +67,16 @@
                     <x-form.input name="maximum_bookings" type="number" min="1" step="1"
                                   :value="$bookingOption->maximum_bookings ?? null"/>
                 </x-form.row>
-                {{-- <x-form.row>
+                <x-form.row>
                     <x-form.label for="available_from">{{ __('Start date') }}</x-form.label>
                     <x-form.input name="available_from" type="datetime-local"
                                   :value="isset($bookingOption->available_from) ? $bookingOption->available_from->format('Y-m-d\TH:i') : null"/>
-                </x-form.row> --}}
-                {{-- <x-form.row>
+                </x-form.row>
+                <x-form.row>
                     <x-form.label for="available_until">{{ __('End date') }}</x-form.label>
                     <x-form.input name="available_until" type="datetime-local"
                                   :value="isset($bookingOption->available_until) ? $bookingOption->available_until->format('Y-m-d\TH:i') : null"/>
-                </x-form.row> --}}
+                </x-form.row>
                 <x-form.row>
                     <x-form.label for="price">{{ __('Price per Day') }}</x-form.label>
                     <x-form.input name="price" type="number" min="0.01" step="0.01"

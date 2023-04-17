@@ -50,16 +50,16 @@
                     <x-form.label for="visibility">{{ __('Visibility') }}</x-form.label>
                     <x-form.select name="visibility" :options="\App\Options\Visibility::keysWithNames()" :value="$service->visibility->value ?? null" />
                 </x-form.row>
-                {{-- <x-form.row>
+                <x-form.row>
                     <x-form.label for="started_at">{{ __('Start date') }}</x-form.label>
                     <x-form.input name="started_at" type="datetime-local"
                                   :value="isset($service->started_at) ? $service->started_at->format('Y-m-d\TH:i') : null"/>
-                </x-form.row> --}}
-                {{-- <x-form.row>
+                </x-form.row>
+                <x-form.row>
                     <x-form.label for="finished_at">{{ __('End date') }}</x-form.label>
                     <x-form.input name="finished_at" type="datetime-local"
                                   :value="isset($service->finished_at) ? $service->finished_at->format('Y-m-d\TH:i') : null"/>
-                </x-form.row> --}}
+                </x-form.row>
             </div>
             <div class="col-12 col-md-6">
                 <x-form.row>

@@ -21,10 +21,6 @@
                 <a href="{{ route('events.show', $service->slug) }}" class="list-group-item list-group-item-action"
                     style="margin-bottom: 20px;">
                     <div class="row">
-                        {{-- <div class="col">
-                            <strong>{{ $service->name }}</strong><span> by Landscaper</span>
-                            {{ $service->user_name }}
-                        </div> --}}
                         <div style="text-align: right" class="col">
                             <div>
                                 {{ number_format($service->service_rating, 1) }}
@@ -35,10 +31,10 @@
                     <div>
                         <img src="{{ asset('storage/' . $service->image) }}" width="200" alt="Image">
                     </div>
-                    {{-- <div>
+                    <div>
                     <i class="fa fa-fw fa-clock"></i>
                     @include('events.shared.event_dates')
-                    </div> --}}
+                    </div>
                     <div>
                         <i class="fa fa-fw fa-location-pin"></i>
                         {{ $service->location->nameOrAddress }}
