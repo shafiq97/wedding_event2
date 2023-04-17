@@ -117,8 +117,7 @@ class Venue extends Model
             $filename    = $image->storePublicly('landscape', 'public');
             $this->image = $filename;
         }else{
-            dd('hehe');
-
+            // dd('hehe');
         }
 
 

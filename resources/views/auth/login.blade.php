@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('title')
-    {{ __('Wedding Hall Event') }}
+    {{ __('I-Wedding Package Booking System') }}
 @endsection
 
 @section('main')
     <x-card.centered>
-        @if(config('app.features.registration'))
+        @if (config('app.features.registration'))
             <div class="alert alert-primary mb-3">
                 {{ __('Not registered yet?') }}
-
                 <a class="alert-link" href="{{ route('register') }}">
                     {{ __('Register') }}
                 </a>
@@ -23,8 +22,7 @@
             </x-form.row>
             <x-form.row>
                 <x-form.label for="password">{{ __('Password') }}</x-form.label>
-                <x-form.input name="password" type="password" required
-                              autocomplete="current-password" />
+                <x-form.input name="password" type="password" required autocomplete="current-password" />
             </x-form.row>
             <x-form.row>
                 <x-form.input name="remember" type="checkbox">{{ __('Remember me') }}</x-form.input>
