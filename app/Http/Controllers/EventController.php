@@ -21,8 +21,8 @@ class EventController extends Controller
     public function index(EventFilterRequest $request): View
     {
         $this->authorize('viewAny', Venue::class);
-    
-        $services = Venue::filter()
+
+        $venues = Venue::filter()
             ->with([
                 'bookingOptions' => static fn(HasMany $query) => $query->withCount([
                     'bookings',
@@ -33,20 +33,20 @@ class EventController extends Controller
                 'parentEvent',
                 'user' => static fn(BelongsTo $query) => $query->select('id', 'first_name'),
             ]);
-    
+
         /** @var ?\App\Models\User $user */
         $user = Auth::user();
-        if ($user !== null && $user->userRoles()->pluck('name')->contains('Landscaper')) {
-            $services = $services->where('user_id', $user->id);
+        if ($user !== null && $user->userRoles()->pluck('name')->contains('Vendor')) {
+            $venues = $venues->where('user_id', $user->id);
         }
-    
-        $services = $services->paginate();
-    
+
+        $venues = $venues->paginate();
+
         return view('events.event_index', $this->formValuesForFilter([
-            'services' => $services,
+            'services' => $venues,
         ]));
     }
-    
+
 
     public function destroy(Venue $service): RedirectResponse
     {
@@ -89,7 +89,7 @@ class EventController extends Controller
             return back()->withErrors(['image' => __('Failed to upload image.')]);
         }
 
-        $service = new Venue();
+        $service          = new Venue();
         $service->user_id = Auth::id(); // Set the user_id of the current user
         if ($service->fillAndSave($request->validated())) {
             Session::flash('success', __('Created successfully.'));
