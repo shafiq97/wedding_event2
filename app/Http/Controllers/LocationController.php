@@ -35,7 +35,7 @@ class LocationController extends Controller
 
     public function store(LocationRequest $request): RedirectResponse
     {
-        $this->authorize('create', User::class);
+        // $this->authorize('create', User::class);
 
         $location = new Location();
         if ($location->fillAndSave($request->validated())) {
