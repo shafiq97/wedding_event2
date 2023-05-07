@@ -71,7 +71,7 @@
                     <x-form.input id="organization_id" name="organization_id[]" type="checkbox" :options="$organizations->pluck('name', 'id')"
                         :value="isset($service) ? $service->organizations->pluck('id')->toArray() : []" :valuesToInt="true" />
                 </x-form.row>
-                <x-form.row>
+                {{-- <x-form.row>
                     <x-form.label for="parent_event_id">{{ __('Part of the venue') }}</x-form.label>
                     <x-form.select name="parent_event_id" :options="$services->except($service->id ?? null)->pluck('name', 'id')" :value="$service->parent_event_id ?? null">
                         <option value="">{{ __('none') }}</option>
@@ -82,7 +82,7 @@
                     <x-form.select name="event_series_id" :options="$eventSeries->pluck('name', 'id')" :value="$service->event_series_id ?? null">
                         <option value="">{{ __('none') }}</option>
                     </x-form.select>
-                </x-form.row>
+                </x-form.row> --}}
                 <x-form.row>
                     <x-form.label for="image">{{ __('Image') }}</x-form.label>
                     <x-form.input name="image" type="file" accept="image/*" id="image-input" />
