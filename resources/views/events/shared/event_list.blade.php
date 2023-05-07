@@ -31,10 +31,10 @@
                     <div>
                         <img src="{{ asset('storage/' . $service->image) }}" width="200" alt="Image">
                     </div>
-                    <div>
+                    {{-- <div>
                     <i class="fa fa-fw fa-clock"></i>
                     @include('events.shared.event_dates')
-                    </div>
+                    </div> --}}
                     <div>
                         <i class="fa fa-fw fa-location-pin"></i>
                         {{ $service->location->nameOrAddress }}
