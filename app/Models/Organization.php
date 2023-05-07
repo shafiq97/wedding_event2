@@ -15,6 +15,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 /**
  * @property-read int $id
+ * @property-read int $user_id
  * @property string $name
  * @property ActiveStatus $status
  * @property ?string $register_entry
@@ -41,6 +42,7 @@ class Organization extends Model
         'register_entry',
         'representatives',
         'website_url',
+        'user_id'
     ];
 
     /**

@@ -33,8 +33,8 @@
         </x-form.row>
     </div>
 </div>
-<x-form.row>
+{{-- <x-form.row>
     <x-form.label for="country">{{ __('Country') }}</x-form.label>
     <x-form.input name="country" type="text"
                   :value="$address->country ?? null" />
-</x-form.row>
+</x-form.row> --}}
