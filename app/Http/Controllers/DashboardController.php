@@ -144,7 +144,7 @@ class DashboardController extends Controller
         $loggedInUserId = auth()->user()->id;
 
         $bookingsQuery = Booking::filter()
-            ->join('services', 'bookings.service_id', '=', 'venues.id')
+            ->join('venues', 'bookings.service_id', '=', 'venues.id')
             ->where('venues.user_id', $loggedInUserId)
             ->with([
                 'bookedByUser',
