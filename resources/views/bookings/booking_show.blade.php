@@ -13,11 +13,14 @@
 @endsection
 
 @section('breadcrumbs')
-    <x-nav.breadcrumb href="{{ route('events.index') }}">{{ __('Events') }}</x-nav.breadcrumb>
+    <x-nav.breadcrumb href="{{ route('events.index') }}">
+        {{ __('Events') }}</x-nav.breadcrumb>
     <x-nav.breadcrumb href="{{ route('events.show', $service) }}">{{ $service->name }}</x-nav.breadcrumb>
-    <x-nav.breadcrumb href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ $bookingOption->name }}</x-nav.breadcrumb>
+    <x-nav.breadcrumb href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ $bookingOption->name }}
+    </x-nav.breadcrumb>
     @can('viewAny', \App\Models\Booking::class)
-        <x-nav.breadcrumb href="{{ route('bookings.index', [$service, $bookingOption]) }}">{{ __('Bookings') }}</x-nav.breadcrumb>
+        <x-nav.breadcrumb href="{{ route('bookings.index', [$service, $bookingOption]) }}">{{ __('Bookings') }}
+        </x-nav.breadcrumb>
     @endcan
 @endsection
 
@@ -27,7 +30,7 @@
 
 @section('headline-buttons')
     @can('update', $booking)
-        <x-button.edit href="{{ route('bookings.edit', $booking) }}"/>
+        <x-button.edit href="{{ route('bookings.edit', $booking) }}" />
     @endcan
 @endsection
 
@@ -40,8 +43,8 @@
             @include('bookings.shared.booking_details')
 
             @isset($bookingOption->form)
-                @foreach($bookingOption->form->formFieldGroups as $group)
-                    @if($group->show_name)
+                @foreach ($bookingOption->form->formFieldGroups as $group)
+                    @if ($group->show_name)
                         <h2 id="{{ Str::slug($group->name) }}">{{ $group->name }}</h2>
                     @endif
                     @isset($group->description)
@@ -49,36 +52,35 @@
                     @endisset
 
                     <div class="row">
-                        @foreach($group->formFields as $field)
+                        @foreach ($group->formFields as $field)
                             @php
                                 $allowedValues = array_combine($field->allowed_values ?? [], $field->allowed_values ?? []);
                                 $inputName = $field->input_name . ($field->isMultiCheckbox() ? '[]' : '');
                             @endphp
                             <div class="{{ $field->container_class ?? 'col-12' }}">
                                 <x-form.row>
-                                    @if($field->type === 'checkbox' && ($field->allowed_values === null || count($field->allowed_values) === 1))
-                                        <x-form.input readonly disabled
-                                                      name="{{ $field->input_name }}" type="{{ $field->type }}"
-                                                      :value="$booking?->getFieldValue($field)">
+                                    @if ($field->type === 'checkbox' && ($field->allowed_values === null || count($field->allowed_values) === 1))
+                                        <x-form.input readonly disabled name="{{ $field->input_name }}"
+                                            type="{{ $field->type }}" :value="$booking?->getFieldValue($field)">
                                             {{ $field->allowed_values[0] ?? $field->name }}
-                                            @if($field->required) * @endif
+                                            @if ($field->required)
+                                                *
+                                            @endif
                                         </x-form.input>
                                     @else
-                                        <x-form.label for="{{ $inputName }}">{{ $field->name }} @if($field->required) * @endif</x-form.label>
-                                        @if(!$field->required || $field->type === 'checkbox')
-                                            <x-form.input readonly disabled
-                                                          name="{{ $inputName }}" type="{{ $field->type }}"
-                                                          :options="$allowedValues"
-                                                          :value="$booking?->getFieldValue($field)" />
+                                        <x-form.label for="{{ $inputName }}">{{ $field->name }} @if ($field->required)
+                                                *
+                                            @endif
+                                        </x-form.label>
+                                        @if (!$field->required || $field->type === 'checkbox')
+                                            <x-form.input readonly disabled name="{{ $inputName }}"
+                                                type="{{ $field->type }}" :options="$allowedValues" :value="$booking?->getFieldValue($field)" />
                                         @else
-                                            <x-form.input readonly disabled
-                                                          name="{{ $inputName }}" type="{{ $field->type }}"
-                                                          :options="$allowedValues"
-                                                          :value="$booking?->getFieldValue($field)"
-                                                          required />
+                                            <x-form.input readonly disabled name="{{ $inputName }}"
+                                                type="{{ $field->type }}" :options="$allowedValues" :value="$booking?->getFieldValue($field)" required />
                                         @endif
                                     @endif
-                                    @if(isset($field->hint) && $field->type !== 'hidden')
+                                    @if (isset($field->hint) && $field->type !== 'hidden')
                                         <div id="{{ $field->id }}-hint" class="form-text">
                                             {!! $field->hint !!}
                                         </div>
@@ -88,47 +90,42 @@
                         @endforeach
                     </div>
                 @endforeach
-            @else {{-- no form set, so use the default form --}}
+            @else
+                {{-- no form set, so use the default form --}}
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <x-form.row>
                             <x-form.label for="first_name">{{ __('First name') }}</x-form.label>
-                            <x-form.input readonly disabled name="first_name"
-                                          value="{{ $booking->first_name }}" />
+                            <x-form.input readonly disabled name="first_name" value="{{ $booking->first_name }}" />
                         </x-form.row>
                     </div>
                     <div class="col-12 col-md-6">
                         <x-form.row>
                             <x-form.label for="last_name">{{ __('Last name') }}</x-form.label>
-                            <x-form.input readonly disabled name="last_name"
-                                          value="{{ $booking->last_name }}" />
+                            <x-form.input readonly disabled name="last_name" value="{{ $booking->last_name }}" />
                         </x-form.row>
                     </div>
                 </div>
                 <x-form.row>
                     <x-form.label for="phone">{{ __('Phone number') }}</x-form.label>
-                    <x-form.input readonly disabled name="phone"
-                                  value="{{ $booking->phone ?? null }}" />
+                    <x-form.input readonly disabled name="phone" value="{{ $booking->phone ?? null }}" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="email">{{ __('E-mail') }}</x-form.label>
-                    <x-form.input readonly disabled name="email"
-                                  value="{{ $booking->email }}" />
+                    <x-form.input readonly disabled name="email" value="{{ $booking->email }}" />
                 </x-form.row>
 
                 <div class="row">
                     <div class="col-12 col-md-8">
                         <x-form.row>
                             <x-form.label for="street">{{ __('Street') }}</x-form.label>
-                            <x-form.input readonly disabled name="street"
-                                          value="{{ $booking->street ?? null }}" />
+                            <x-form.input readonly disabled name="street" value="{{ $booking->street ?? null }}" />
                         </x-form.row>
                     </div>
                     <div class="col-12 col-md-4">
                         <x-form.row>
                             <x-form.label for="house_number">{{ __('House number') }}</x-form.label>
-                            <x-form.input readonly disabled name="house_number"
-                                          value="{{ $booking->house_number ?? null }}" />
+                            <x-form.input readonly disabled name="house_number" value="{{ $booking->house_number ?? null }}" />
                         </x-form.row>
                     </div>
                 </div>
@@ -136,36 +133,44 @@
                     <div class="col-12 col-md-4">
                         <x-form.row>
                             <x-form.label for="postal_code">{{ __('Postal code') }}</x-form.label>
-                            <x-form.input readonly disabled name="postal_code"
-                                          value="{{ $booking->postal_code ?? null }}" />
+                            <x-form.input readonly disabled name="postal_code" value="{{ $booking->postal_code ?? null }}" />
                         </x-form.row>
                     </div>
                     <div class="col-12 col-md-8">
                         <x-form.row>
                             <x-form.label for="city">{{ __('City') }}</x-form.label>
-                            <x-form.input readonly disabled name="city"
-                                          value="{{ $booking->city ?? null }}" />
+                            <x-form.input readonly disabled name="city" value="{{ $booking->city ?? null }}" />
                         </x-form.row>
                     </div>
                 </div>
                 <x-form.row>
                     <x-form.label for="country">{{ __('Country') }}</x-form.label>
-                    <x-form.input readonly disabled name="country"
-                                  value="{{ $booking->country ?? null }}" />
+                    <x-form.input readonly disabled name="country" value="{{ $booking->country ?? null }}" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="reviews">{{ __('Review') }}</x-form.label>
                     <x-form.input readonly disabled name="review"
-                                  value="{{ $booking->reviews()->first()->comment ?? null }}" />
+                        value="{{ $booking->reviews()->first()->comment ?? null }}" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="rating">{{ __('Rating') }}</x-form.label>
                     <x-form.input readonly disabled name="rating"
-                                  value="{{ $booking->reviews()->first()->rating ?? null }}" />
+                        value="{{ $booking->reviews()->first()->rating ?? null }}" />
                 </x-form.row>
+                @isset($booking)
+                    <x-form.row>
+                        <form action="{{ route('payment', $booking->id) }}" method="post">
+                            @csrf
+                            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                            <input type="hidden" name="amount" value="{{ $booking->price }}">
+                            <input type="hidden" name="payment_method" value="Credit Card">
+                            <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
+                        </form>
+                    </x-form.row>
+                @endisset
             @endisset
         </div>
     </div>
 
-    <x-text.timestamp :model="$booking ?? null"/>
+    <x-text.timestamp :model="$booking ?? null" />
 @endsection

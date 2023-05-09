@@ -14,6 +14,7 @@ use App\Http\Controllers\PersonalAccessTokenController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Booking;
 use App\Models\BookingOption;
 use App\Models\Venue;
@@ -121,5 +122,10 @@ Route::get('/chat_center', [ChatController::class, 'index'])->name('chat.center'
 Route::get('/chat_landscaper', [ChatController::class, 'chat_landscaper'])->name('chat.landscaper');
 
 Route::get('/reports', [DashboardController::class, 'landscaper_report'])->name('dashboard.landscaper_report');
+
+// Payment
+Route::get('payment/{booking}', [PaymentController::class, 'index'])->name('payment.index');
+Route::post('payment/{booking}', [PaymentController::class, 'process'])->name('payment.process');
+
 
 require __DIR__ . '/auth.php';
