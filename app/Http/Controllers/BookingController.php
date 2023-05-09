@@ -76,6 +76,8 @@ class BookingController extends Controller
         $booking->bookedByUser()->associate(Auth::user());
         $booking->booked_at = Carbon::now()->toDate();
         $booking->venue_id = $venue->id;
+        $booking->booked_date_until = $request->input('booked_date_until');
+        $booking->booked_date_from = $request->input('booked_date_from');
 
 
         if ($booking->fillAndSave($request->validated())) {

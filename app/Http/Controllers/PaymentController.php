@@ -40,6 +40,6 @@ class PaymentController extends Controller
         $payment->save();
 
         // Redirect or return a response as needed
-        return redirect()->route('some_route')->with('success', 'Payment processed successfully.');
+        return redirect()->route('dashboard')->with('success', 'Payment processed successfully.');
     }
 }

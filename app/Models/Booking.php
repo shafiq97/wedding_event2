@@ -22,6 +22,9 @@ use Spatie\QueryBuilder\AllowedFilter;
  * @property string $email
  * @property ?string $phone
  * @property ?Carbon $booked_at
+ * @property ?Carbon $booked_date_until
+ * @property ?Carbon $booked_date_from
+ * @property ?Carbon $booked_at
  * @property ?float $price
  * @property ?Carbon $paid_at
  * @property ?string $comment
@@ -55,6 +58,8 @@ class Booking extends Model
         'paid_at',
         'comment',
         'venue_id',
+        'booking_date_until',
+        'booking_date_from'
     ];
 
     /**

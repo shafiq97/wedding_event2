@@ -159,7 +159,7 @@
                 </x-form.row>
                 @isset($booking)
                     <x-form.row>
-                        <form action="{{ route('payment', $booking->id) }}" method="post">
+                        <form action="{{ route('payment.index', $booking->id) }}" method="get">
                             @csrf
                             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                             <input type="hidden" name="amount" value="{{ $booking->price }}">
