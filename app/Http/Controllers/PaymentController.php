@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
 {
@@ -13,16 +14,23 @@ class PaymentController extends Controller
     {
         // Load the booking information
         $booking = Booking::findOrFail($booking);
-    
+
         return view('payments.index', compact('booking'));
     }
-    
+
 
     public function process(Request $request)
     {
         // Validate the request data
+        // Validate the request data
         $request->validate([
-            'booking_id' => 'required|integer|exists:bookings,id',
+            'booking_id' => [
+                'required',
+                'integer',
+                'exists:bookings,id',
+                Rule::unique('payments', 'booking_id')
+                    ->where('payment_method', $request->input('payment_method')),
+            ],
             'amount' => 'required|numeric|min:0.01',
             'payment_method' => 'required|string',
             // Add other fields as needed

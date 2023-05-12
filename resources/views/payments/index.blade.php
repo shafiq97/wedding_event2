@@ -2,6 +2,16 @@
 
 @section('content')
     <div class="container">
+        <!-- Add this at the top of your form, before the form fields -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <h1>Payment</h1>
 
         <form action="{{ route('payment.process', $booking->id) }}" method="post">
