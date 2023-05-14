@@ -73,28 +73,43 @@
                     'bookingOption' => $bookingOption,
                 ])
 
-                {{-- @if (isset($bookingOption->price) && $bookingOption->price)
-                    <div class="alert alert-info">
-                        {{ __('Please transfer :price to the following bank account:', [
-                            'price' => formatDecimal($bookingOption->price) . ' ',
-                        ]) }}
-                        <ul>
-                            <li>MY: {{ config('app.bank_account.my') }}</li>
-                            <li>{{ __('Bank') }}: {{ config('app.bank_account.bank_name') }}</li>
-                            <li>{{ __('Account holder') }}: {{ config('app.bank_account.holder') }}</li>
-                        </ul>
-                    </div>
-                @endif --}}
-
                 <x-button.save>
                     @isset($bookingOption->price)
-                        {{ __('Book with costs') }}
-                        ({{ formatDecimal($bookingOption->price) }}&nbsp;)
+                        {{ __('Book with costs') }} <span
+                            id="total_cost">({{ formatDecimal($bookingOption->price) }}&nbsp;)</span>
                     @else
                         {{ __('Book') }}
                     @endisset
                 </x-button.save>
             </x-form>
+
+            <script>
+                const costPerDay = {{ $bookingOption->price }};
+                const totalCostSpan = document.getElementById('total_cost');
+
+                bookedDateFrom.addEventListener('change', calculateTotalCost);
+                bookedDateUntil.addEventListener('change', calculateTotalCost);
+
+                function calculateTotalCost() {
+                    const fromDate = new Date(bookedDateFrom.value);
+                    const untilDate = new Date(bookedDateUntil.value);
+
+                    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+                    const numberOfDays = Math.round(Math.abs((fromDate - untilDate) / millisecondsPerDay)) + 1;
+
+                    totalCostSpan.textContent = '(' + (costPerDay * numberOfDays).toFixed(2) + ')';
+                }
+
+                function validateDates() {
+                    const fromDate = new Date(bookedDateFrom.value);
+                    const untilDate = new Date(bookedDateUntil.value);
+
+                    if (fromDate > untilDate) {
+                        alert("The 'Booking Date Until' must be the same as or after 'Booking Date From'.");
+                        bookedDateUntil.value = bookedDateFrom.value;
+                    }
+                }
+            </script>
             {{-- @endif --}}
         </div>
     </div>

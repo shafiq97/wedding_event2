@@ -74,10 +74,18 @@ class BookingController extends Controller
         $booking->bookingOption()->associate($bookingOption);
         $booking->price = $bookingOption->price;
         $booking->bookedByUser()->associate(Auth::user());
-        $booking->booked_at = Carbon::now()->toDate();
-        $booking->venue_id = $venue->id;
+        $booking->booked_at         = Carbon::now()->toDate();
+        $booking->venue_id          = $venue->id;
         $booking->booked_date_until = $request->input('booked_date_until');
-        $booking->booked_date_from = $request->input('booked_date_from');
+        $booking->booked_date_from  = $request->input('booked_date_from');
+
+        // Calculate the number of days
+        $bookedDateFrom  = Carbon::parse($booking->booked_date_from);
+        $bookedDateUntil = Carbon::parse($booking->booked_date_until);
+        $numberOfDays    = $bookedDateFrom->diffInDays($bookedDateUntil) + 1; // adding 1 to include the start day
+
+        // Calculate the total cost
+        $booking->price = $numberOfDays * $bookingOption->price;
 
 
         if ($booking->fillAndSave($request->validated())) {
@@ -94,7 +102,7 @@ class BookingController extends Controller
             if (Auth::user()?->can('view', $booking)) {
                 return redirect(route('bookings.show', $booking));
             }
-        }else{
+        } else {
             $message = __('Booking has been made on this the choosen date for the venue.');
             Session::flash('error', $message);
         }
