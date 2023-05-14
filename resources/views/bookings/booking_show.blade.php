@@ -148,6 +148,16 @@
                     <x-form.input readonly disabled name="country" value="{{ $booking->country ?? null }}" />
                 </x-form.row>
                 <x-form.row>
+                    <x-form.label for="booked_date_from">{{ __('Booked from') }}</x-form.label>
+                    <x-form.input readonly disabled name="booked_date_from"
+                        value="{{ $booking->booked_date_from ?? null }}" />
+                </x-form.row>
+                <x-form.row>
+                    <x-form.label for="booked_date_until">{{ __('Booked until') }}</x-form.label>
+                    <x-form.input readonly disabled name="review"
+                        value="{{ $booking->booked_date_until ?? null }}" />
+                </x-form.row>
+                <x-form.row>
                     <x-form.label for="reviews">{{ __('Review') }}</x-form.label>
                     <x-form.input readonly disabled name="review"
                         value="{{ $booking->reviews()->first()->comment ?? null }}" />
@@ -157,6 +167,7 @@
                     <x-form.input readonly disabled name="rating"
                         value="{{ $booking->reviews()->first()->rating ?? null }}" />
                 </x-form.row>
+              
                 @isset($booking)
                     <x-form.row>
                         <form action="{{ route('payment.index', $booking->id) }}" method="get">

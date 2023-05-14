@@ -14,7 +14,8 @@
         @endif
         <h1>Payment</h1>
 
-        <form action="{{ route('payment.process', $booking->id) }}" method="post">
+        <!-- Add enctype attribute to your form tag -->
+        <form action="{{ route('payment.process', $booking->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
             <label for="">Total RM</label><br>
@@ -23,6 +24,12 @@
             <label for="">Payment method</label> <br>
             <input type="text" name="payment_method" value="Credit Card">
             <br><br>
+
+            <!-- Add this to your form fields -->
+            <label for="receipt">Upload Receipt (PDF or Image)</label><br>
+            <input type="file" name="receipt" accept=".pdf, .jpg, .jpeg, .png">
+            <br><br>
+
             <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
         </form>
     </div>
