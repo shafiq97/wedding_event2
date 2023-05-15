@@ -113,7 +113,6 @@ class BookingController extends Controller
     public function edit(Booking $booking): View
     {
         $this->authorize('update', $booking);
-
         return view('bookings.booking_form', [
             'booking' => $booking->loadMissing([
                 'bookingOption.form.formFieldGroups.formFields',
@@ -132,4 +131,4 @@ class BookingController extends Controller
 
         return back();
     }
-}
+}  

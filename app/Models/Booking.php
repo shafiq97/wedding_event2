@@ -188,4 +188,10 @@ class Booking extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function payment(): BelongsTo
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
 }

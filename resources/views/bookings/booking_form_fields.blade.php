@@ -2,6 +2,10 @@
     /** @var ?\App\Models\Booking $booking */
     /** @var \App\Models\BookingOption $bookingOption */
 @endphp
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 
 @isset($bookingOption->form)
     @foreach ($bookingOption->form->formFieldGroups as $group)
@@ -81,19 +85,26 @@
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateFrom">{{ __('Booking Date From') }}</x-form.label>
-        <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" />
+        <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_until" />
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateUntil">{{ __('Booking Date Until') }}</x-form.label>
-        <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" />
+        <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_from" />
     </x-form.row>
     <x-form.row>
         <x-form.label>{{ __('Number of days') }}</x-form.label>
         <x-form.input type="text" name="num_of_days" readonly />
-    </x-form.row>    
+    </x-form.row>
     @include('_shared.address_fields_form', [
         'address' => $booking,
     ])
+    @if ($booking->payment && Storage::disk('public')->exists($booking->payment->receipt))
+        <x-form.row>
+            <a href="{{ Storage::disk('public')->url($booking->payment->receipt) }}" class="btn btn-primary"
+                download>Download Receipt</a>
+        </x-form.row>
+    @endif
+
 @endisset
 <script>
     var startDateInput = document.querySelector('input[name="booked_date_from"]');
@@ -106,7 +117,7 @@
 
         if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
             var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
             numOfDaysInput.value = diffDays;
         } else {
             numOfDaysInput.value = ''; // clear the input if dates are not valid
