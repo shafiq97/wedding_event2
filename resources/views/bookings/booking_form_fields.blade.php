@@ -6,7 +6,6 @@
     use Illuminate\Support\Facades\Storage;
 @endphp
 
-
 @isset($bookingOption->form)
     @foreach ($bookingOption->form->formFieldGroups as $group)
         @if ($group->show_name)
@@ -62,6 +61,20 @@
 @else
     {{-- no form set, so use the default form --}}
     <div class="row">
+        @if ($booking->payment)
+            <div class="col-12 col-md-4">
+                <x-form.row>
+                    <a href="{{ Storage::url($booking->payment->receipt) }}" download>
+                        <button type="button" class="btn btn-primary">Download Receipt</button>
+                    </a>
+                </x-form.row>
+            </div>
+        @else
+            <p>No payment found for this booking</p>
+        @endif
+    </div>
+    <hr>
+    <div class="row">
         <div class="col-12 col-md-6">
             <x-form.row>
                 <x-form.label for="first_name">{{ __('First name') }}</x-form.label>
@@ -98,12 +111,6 @@
     @include('_shared.address_fields_form', [
         'address' => $booking,
     ])
-    @if ($booking->payment && Storage::disk('public')->exists($booking->payment->receipt))
-        <x-form.row>
-            <a href="{{ Storage::disk('public')->url($booking->payment->receipt) }}" class="btn btn-primary"
-                download>Download Receipt</a>
-        </x-form.row>
-    @endif
 
 @endisset
 <script>

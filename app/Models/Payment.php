@@ -16,4 +16,10 @@ class Payment extends Model
         'receipt',
         // Add other fields as needed
     ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
 }

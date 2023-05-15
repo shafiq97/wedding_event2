@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-    /** @var \App\Models\Venue $service */
+    /** @var \App\Models\Venue $venue */
     /** @var \App\Models\BookingOption $bookingOption */
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Booking[] $bookings */
 @endphp
@@ -12,9 +12,9 @@
 
 @section('breadcrumbs')
     <x-nav.breadcrumb href="{{ route('events.index') }}">{{ __('Events') }}</x-nav.breadcrumb>
-    <x-nav.breadcrumb href="{{ route('events.show', $service) }}">{{ $service->name }}</x-nav.breadcrumb>
-    <x-nav.breadcrumb
-            href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ $bookingOption->name }}</x-nav.breadcrumb>
+    <x-nav.breadcrumb href="{{ route('events.show', $venue) }}">{{ $venue->name }}</x-nav.breadcrumb>
+    <x-nav.breadcrumb href="{{ route('booking-options.show', [$venue, $bookingOption]) }}">{{ $bookingOption->name }}
+    </x-nav.breadcrumb>
     <x-nav.breadcrumb>{{ __('Bookings') }}</x-nav.breadcrumb>
 @endsection
 
@@ -24,8 +24,8 @@
 
 @section('headline-buttons')
     @can('create', $bookingOption)
-        <x-button.create
-                href="{{ route('booking-options.show', [$service, $bookingOption]) }}">{{ __('Book') }}</x-button.create>
+        <x-button.create href="{{ route('booking-options.show', [$venue, $bookingOption]) }}">{{ __('Book') }}
+        </x-button.create>
     @endcan
 @endsection
 
@@ -36,21 +36,20 @@
                 <div class="col-12 col-md-9">
                     <x-form.row>
                         <x-form.label for="search">{{ __('Search term') }}</x-form.label>
-                        <x-form.input id="search" name="filter[search]"/>
+                        <x-form.input id="search" name="filter[search]" />
                     </x-form.row>
                 </div>
                 <div class="col-12 col-md-3">
                     <x-form.row>
                         <x-form.label for="payment_status">{{ __('Payment status') }}</x-form.label>
-                        <x-form.select id="payment_status" name="filter[payment_status]"
-                                       :options="\App\Options\PaymentStatus::keysWithNamesAndAll()"/>
+                        <x-form.select id="payment_status" name="filter[payment_status]" :options="\App\Options\PaymentStatus::keysWithNamesAndAll()" />
                     </x-form.row>
                 </div>
             </div>
         @else
             <x-form.row>
                 <x-form.label for="search">{{ __('Search term') }}</x-form.label>
-                <x-form.input id="search" name="filter[search]"/>
+                <x-form.input id="search" name="filter[search]" />
             </x-form.row>
         @endcan
 
@@ -64,10 +63,10 @@
         </x-slot:addButtons>
     </x-form.filter>
 
-    <x-alert.count class="mt-3" :count="$bookings->total()"/>
+    <x-alert.count class="mt-3" :count="$bookings->total()" />
 
     <div class="row my-3">
-        @foreach($bookings as $booking)
+        @foreach ($bookings as $booking)
             <div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-3">
                 <div class="card">
                     <div class="card-header">
@@ -86,7 +85,8 @@
                         <x-list.item :flex="false">
                             <i class="fa fa-fw fa-user"></i>
                             @isset($booking->bookedByUser)
-                                <span title="{{ $booking->bookedByUser->email }}">{{ $booking->bookedByUser->first_name }} {{ $booking->bookedByUser->last_name }}</span>
+                                <span title="{{ $booking->bookedByUser->email }}">{{ $booking->bookedByUser->first_name }}
+                                    {{ $booking->bookedByUser->last_name }}</span>
                             @else
                                 {{ __('Guest') }}
                             @endisset
@@ -104,9 +104,8 @@
                                 {{ formatDecimal($booking->price) }}&nbsp;
                                 @can('viewPaymentStatus', $booking)
                                     @isset($booking->paid_at)
-                                        <span class="badge bg-primary">{{ __('paid') }} ({{ $booking->paid_at->isMidnight()
-                                        ? formatDate($booking->paid_at)
-                                        : formatDateTime($booking->paid_at) }})</span>
+                                        <span class="badge bg-primary">{{ __('paid') }}
+                                            ({{ $booking->paid_at->isMidnight() ? formatDate($booking->paid_at) : formatDateTime($booking->paid_at) }})</span>
                                     @else
                                         <span class="badge bg-danger">{{ __('not paid yet') }}</span>
                                     @endisset
@@ -127,7 +126,7 @@
                             <i class="fa fa-fw fa-road"></i>
                             <span class="d-inline-block">
                                 <div class="d-flex flex-column">
-                                    @if($booking->hasAnyFilledAddressField())
+                                    @if ($booking->hasAnyFilledAddressField())
                                         <div>{{ $booking->streetLine }}</div>
                                         <div>{{ $booking->cityLine }}</div>
                                         <div>{{ $booking->country }}</div>
@@ -146,11 +145,11 @@
                             </x-button.secondary>
                         @endcan
                         @can('update', $booking)
-                            <x-button.edit href="{{ route('bookings.edit', $booking) }}"/>
+                            <x-button.edit href="{{ route('bookings.edit', $booking) }}" />
                         @endcan
                     </div>
                     <div class="card-footer">
-                        <x-text.updated-human-diff :model="$booking"/>
+                        <x-text.updated-human-diff :model="$booking" />
                     </div>
                 </div>
             </div>

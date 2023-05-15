@@ -23,35 +23,41 @@ class BookingController extends Controller
     use StreamsExport;
 
     public function index(
-        Venue $service,
+        Venue $venue,
         BookingOption $bookingOption,
         BookingFilterRequest $request
     ): StreamedResponse|View {
+        // $booking = Booking::find(34); // assuming 34 is the id of the booking
+        // $payment = $booking->payment;
+        // dd($payment);
+
         $bookingOption->load([
             'form.formFieldGroups.formFields',
         ]);
-
+        
         $bookingsQuery = Booking::filter($bookingOption->bookings())
             ->with([
                 'bookedByUser',
+                'payment'
             ]);
 
-        if ($request->query('output') === 'export') {
-            $this->authorize('exportAny', Booking::class);
+        // if ($request->query('output') === 'export') {
+        //     $this->authorize('exportAny', Booking::class);
 
-            $fileName = $service->slug . '-' . $bookingOption->slug;
-            return $this->streamExcelExport(
-                new BookingsExportSpreadsheet($service, $bookingOption, $bookingsQuery->get()),
-                str_replace(' ', '-', $fileName) . '.xlsx',
-            );
-        }
+        //     $fileName = $venue->slug . '-' . $bookingOption->slug;
+        //     return $this->streamExcelExport(
+        //         new BookingsExportSpreadsheet($venue, $bookingOption, $bookingsQuery->get()),
+        //         str_replace(' ', '-', $fileName) . '.xlsx',
+        //     );
+        // }
 
         $this->authorize('viewAny', Booking::class);
-
+        $bookings = $bookingsQuery->paginate();
+        // dd($bookings->first());
         return view('bookings.booking_index', [
-            'service' => $service,
+            'venue' => $venue,
             'bookingOption' => $bookingOption,
-            'bookings' => $bookingsQuery->paginate(),
+            'bookings' => $bookings,
         ]);
     }
 
@@ -131,4 +137,4 @@ class BookingController extends Controller
 
         return back();
     }
-}  
+}
