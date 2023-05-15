@@ -98,15 +98,17 @@
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateFrom">{{ __('Booking Date From') }}</x-form.label>
-        <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_until" />
+        <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_from"
+            :disabled="isset($booking->booked_date_from)" />
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateUntil">{{ __('Booking Date Until') }}</x-form.label>
-        <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_from" />
+        <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_until"
+            :disabled="isset($booking->booked_date_until)" />
     </x-form.row>
     <x-form.row>
         <x-form.label>{{ __('Number of days') }}</x-form.label>
-        <x-form.input type="text" name="num_of_days" readonly />
+        <x-form.input type="text" name="num_of_days" :disabled="true" />
     </x-form.row>
     @include('_shared.address_fields_form', [
         'address' => $booking,
