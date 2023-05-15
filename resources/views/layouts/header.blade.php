@@ -76,12 +76,12 @@
                                             {{ __('Forms') }}
                                         </x-nav.dropdown-item>
                                     @endif --}}
-                                    @if ($canViewOrganizations)
+                                    {{-- @if ($canViewOrganizations)
                                         <x-nav.dropdown-item href="{{ route('organizations.index') }}">
                                             <i class="fa fa-fw fa-sitemap"></i>
                                             {{ __('Organizations') }}
                                         </x-nav.dropdown-item>
-                                    @endif
+                                    @endif --}}
                                     @if ($canViewLocations)
                                         <x-nav.dropdown-item href="{{ route('locations.index') }}">
                                             <i class="fa fa-fw fa-location-pin"></i>
@@ -131,12 +131,12 @@
                                         </x-nav.dropdown-item>
                                     @endif
                                 @endif
-                                @if ($loggedInUser->can('viewOwn', \App\Models\PersonalAccessToken::class))
+                                {{-- @if ($loggedInUser->can('viewOwn', \App\Models\PersonalAccessToken::class))
                                     <x-nav.dropdown-item href="{{ route('personal-access-tokens.index') }}">
                                         <i class="fa fa-fw fa-id-card-clip"></i>
                                         {{ __('Personal access tokens') }}
                                     </x-nav.dropdown-item>
-                                @endif
+                                @endif --}}
                                 <x-nav.dropdown-item href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fa fa-fw fa-sign-out-alt"></i>
