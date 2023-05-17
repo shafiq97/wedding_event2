@@ -61,18 +61,21 @@
 @else
     {{-- no form set, so use the default form --}}
     <div class="row">
-        @if ($booking->payment)
-            <div class="col-12 col-md-4">
-                <x-form.row>
-                    <a href="{{ Storage::url($booking->payment->receipt) }}" download>
-                        <button type="button" class="btn btn-primary">Download Receipt</button>
-                    </a>
-                </x-form.row>
-            </div>
-        @else
-            <p>No payment found for this booking</p>
+        @if ($booking)
+            @if ($booking->payment)
+                <div class="col-12 col-md-4">
+                    <x-form.row>
+                        <a href="{{ Storage::url($booking->payment->receipt) }}" download>
+                            <button type="button" class="btn btn-primary">Download Receipt</button>
+                        </a>
+                    </x-form.row>
+                </div>
+            @else
+                <p>No payment found for this booking</p>
+            @endif
         @endif
     </div>
+
     <hr>
     <div class="row">
         <div class="col-12 col-md-6">
@@ -98,14 +101,23 @@
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateFrom">{{ __('Booking Date From') }}</x-form.label>
-        <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_from"
-            :disabled="isset($booking->booked_date_from)" />
+        @if ($booking)
+            <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_from"
+                :disabled="isset($booking->booked_date_from)" />
+        @else
+            <x-form.input name="booked_date_from" type="date" min="{{ date('Y-m-d') }}" />
+        @endif
     </x-form.row>
     <x-form.row>
         <x-form.label for="bookingDateUntil">{{ __('Booking Date Until') }}</x-form.label>
-        <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_until"
-            :disabled="isset($booking->booked_date_until)" />
+        @if ($booking)
+            <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" :value="$booking->booked_date_until"
+                :disabled="isset($booking->booked_date_until)" />
+        @else
+            <x-form.input name="booked_date_until" type="date" min="{{ date('Y-m-d') }}" />
+        @endif
     </x-form.row>
+
     <x-form.row>
         <x-form.label>{{ __('Number of days') }}</x-form.label>
         <x-form.input type="text" name="num_of_days" :disabled="true" />
