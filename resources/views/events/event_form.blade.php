@@ -84,16 +84,20 @@
                     </x-form.select>
                 </x-form.row> --}}
                 <x-form.row>
-                    <x-form.label for="image">{{ __('Image') }}</x-form.label>
-                    <x-form.input name="image" type="file" accept="image/*" id="image-input" />
+                    <x-form.label for="images">{{ __('Images') }}</x-form.label>
+                    <x-form.input name="images[]" type="file" accept="image/*" id="image-input" multiple />
                 </x-form.row>
+
 
                 <x-form.row>
                     <x-form.label>{{ __('ImagePreview') }}</x-form.label>
                     {{-- <img src="{{ asset('storage/'.$service->image) }}" width="200" alt="Image"> --}}
-
-                    <img src="{{ isset($service) && $service->image ? asset('storage/' . $service->image) : '' }}"
-                        id="image-preview" style="max-width: 100%; height: auto;">
+                    @if (isset($service))
+                        <img src="{{ isset($service) && $service->image ? asset('storage/' . $service->image) : '' }}"
+                            id="image-preview" style="max-width: 100%; height: auto;">
+                    @else
+                        <div id="image-preview"></div>
+                    @endif
                 </x-form.row>
 
                 @push('scripts')
@@ -102,15 +106,21 @@
                         const preview = document.querySelector('#image-preview');
 
                         input.addEventListener('change', () => {
-                            const file = input.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.addEventListener('load', () => {
-                                    preview.src = reader.result;
-                                });
-                                reader.readAsDataURL(file);
-                            } else {
-                                preview.src = "";
+                            preview.innerHTML = ""; // clear preview
+                            const files = input.files;
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+                                if (file) {
+                                    const reader = new FileReader();
+                                    const img = document.createElement('img');
+                                    img.style.maxWidth = "100%";
+                                    img.style.height = "auto";
+                                    reader.addEventListener('load', () => {
+                                        img.src = reader.result;
+                                        preview.appendChild(img);
+                                    });
+                                    reader.readAsDataURL(file);
+                                }
                             }
                         });
                     </script>
