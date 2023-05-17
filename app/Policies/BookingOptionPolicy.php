@@ -36,7 +36,7 @@ class BookingOptionPolicy
      */
     public function view(?User $user, BookingOption $bookingOption): Response
     {
-        if ($bookingOption->event->visibility === Visibility::Public) {
+        if ($bookingOption->event->visibility === Visibility::Public ) {
             return $this->allow();
         }
 
@@ -47,7 +47,6 @@ class BookingOptionPolicy
     {
         if (
             !isset($bookingOption->available_from)
-            || $bookingOption->available_from->isFuture()
         ) {
             return $this->deny(__('Bookings are not possible yet.'));
         }
