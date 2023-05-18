@@ -24,11 +24,15 @@
                     <div class="row">
                         <div style="text-align: right" class="col">
                             <div>
-                                {{ number_format($service->service_rating, 1) }}
+                                @for ($i = 0; $i < $service->service_rating; $i++)
+                                    <span>&#9733;</span> <!-- this is a star character -->
+                                @endfor
+                                @for ($i = $service->service_rating; $i < 5; $i++)
+                                    <span>&#9734;</span> <!-- this is an empty star character -->
+                                @endfor
                             </div>
                         </div>
                     </div>
-
                     @if ($service->images->count() > 0)
                         <div id="carousel{{ $service->id }}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
