@@ -77,6 +77,5 @@
             @endif
         </div>
     </div>
-
     <x-text.updated-human-diff :model="$service"/>
 @endsection

@@ -6,7 +6,7 @@
 @endphp
 
 @section('title')
-    {{ __('Services') }} by {{ $services_user_name }}
+    {{ __('Venues') }} by {{ $services_user_name }}
 @endsection
 
 @section('breadcrumbs')
@@ -39,7 +39,7 @@
             <p>{{ $service->location_name }}</p>
         @endforeach
     </h6>
-    <h3>Reviews</h3>
+    {{-- <h3>Reviews</h3>
     @if ($services->count())
         <div class="table-responsive">
             <table class="table table-striped">
@@ -75,11 +75,11 @@
         </div>
     @else
         <p>No services found.</p>
-    @endif
+    @endif --}}
 
 
 
-    <x-form.filter method="GET">
+    {{-- <x-form.filter method="GET">
         <div class="row">
             <div class="col-12 col-md-6">
                 <x-form.row>
@@ -104,7 +104,7 @@
                 </x-form.row>
             </div>
         </div>
-    </x-form.filter>
+    </x-form.filter> --}}
 
 
     <x-alert.count class="mt-3" :count="$services->total()" />
