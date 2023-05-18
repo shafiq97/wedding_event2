@@ -27,6 +27,7 @@ class DashboardController extends Controller
             ->leftJoin('reviews', 'venues.id', '=', 'reviews.service_id')
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
+            ->leftJoin('images', 'venues.id', '=', 'images.venue_id')
             ->where('venues.visibility', '=', Visibility::Public ->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
             ->groupBy('venues.id');

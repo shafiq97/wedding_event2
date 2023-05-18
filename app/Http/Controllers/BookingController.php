@@ -13,6 +13,7 @@ use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -74,6 +75,7 @@ class BookingController extends Controller
 
     public function store(Venue $venue, BookingOption $bookingOption, BookingRequest $request): RedirectResponse
     {
+
         $this->authorize('book', $bookingOption);
 
         $booking = new Booking();
@@ -92,7 +94,6 @@ class BookingController extends Controller
 
         // Calculate the total cost
         $booking->price = $numberOfDays * $bookingOption->price;
-
 
         if ($booking->fillAndSave($request->validated())) {
             $message = __('Your booking has been saved successfully.')

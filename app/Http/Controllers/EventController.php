@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -93,6 +94,18 @@ class EventController extends Controller
         $service->user_id = Auth::id(); // Set the user_id of the current user
         if ($service->fillAndSave($request->validated())) {
             Session::flash('success', __('Created successfully.'));
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $file) {
+                    $filename = $file->getClientOriginalName();
+                    $path     = $file->storeAs('images', $filename, 'public');
+                    // You may want to save the path in a database
+                    // For simplicity, let's assume you have an 'images' table with 'booking_id' and 'path' fields
+                    DB::table('images')->insert([
+                        'venue_id' => $service->id,
+                        'path' => $path,
+                    ]);
+                }
+            }
             return redirect(route('events.edit', $service));
         }
 

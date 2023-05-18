@@ -155,7 +155,10 @@ class Venue extends Model
     {
         return $this->hasMany(Review::class)->with('user:id,first_name');
     }
-
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 
 
 }
