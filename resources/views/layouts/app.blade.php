@@ -9,6 +9,7 @@
     <title>@yield('title')</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
 </head>
 
 <body>
