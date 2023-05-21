@@ -27,8 +27,9 @@ class DashboardController extends Controller
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
             ->leftJoin('images', 'venues.id', '=', 'images.venue_id')
+            ->leftJoin('locations', 'venues.location_id', '=', 'locations.id') // Join with locations table
             ->where('venues.visibility', '=', Visibility::Public ->value)
-            ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
+            ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', 'locations.city as city') // add locations.city to the select
             ->groupBy('venues.id');
 
         /** @var ?\App\Models\User $user */
@@ -42,19 +43,17 @@ class DashboardController extends Controller
         $venues->when($request->has('q'), function ($query) use ($request) {
             $q = $request->input('q');
             $query
-                // ->join('users', 'venues.user_id', '=', 'users.id')
-                ->where('users.first_name', 'like', "%$q%")
-                ->orWhere('venues.name', 'like', "%$q%")
-                ->orWhere('venues.description', 'like', "%$q%")
-                ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'));
+                ->where(function ($query) use ($q) {
+                    $query->where('users.first_name', 'like', "%$q%")
+                        ->orWhere('venues.name', 'like', "%$q%")
+                        ->orWhere('venues.description', 'like', "%$q%");
+                })
+                ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'locations.city as city'); // add locations.city to the select
+        })->when($request->has('states'), function ($query) use ($request) {
+            $states = $request->input('states');
+            $query->whereIn('locations.city', $states); // check locations.city instead of venues.city
         })
 
-            // Here is the new state filter
-            ->when($request->has('states'), function ($query) use ($request) {
-                $states = $request->input('states');
-                // dd($states);
-                $query->whereIn('locations.city', $states); // Changed this line
-            })
 
 
             ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
