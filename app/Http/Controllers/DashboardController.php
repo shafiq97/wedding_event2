@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
             ->leftJoin('images', 'venues.id', '=', 'images.venue_id')
-            ->leftJoin('locations', 'venues.location_id', '=', 'locations.id') // Join with locations table
+            ->leftJoin('locations', 'venues.location_id', '=', 'locations.id')
             ->where('venues.visibility', '=', Visibility::Public ->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', 'locations.city as city') // add locations.city to the select
             ->groupBy('venues.id');
@@ -59,6 +59,10 @@ class DashboardController extends Controller
             ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
             ->groupBy('venues.id');
 
+        $venues->when($request->has('rating'), function ($query) use ($request) {
+            $rating = $request->input('rating');
+            $query->havingRaw('COALESCE(AVG(reviews.rating), 0) = ?', [$rating]);
+        });
 
         $events = $venues->get();
 
