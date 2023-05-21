@@ -14,6 +14,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 /**
  * @property-read int $id
+ * @property int $user_id
  * @property string $name
  *
  * @property-read string[] $fullAddressBlock {@see Location::fullAddressBlock()}
@@ -42,6 +43,7 @@ class Location extends Model
         'city',
         'country',
         'website_url',
+        'user_id'
     ];
 
     protected $perPage = 12;

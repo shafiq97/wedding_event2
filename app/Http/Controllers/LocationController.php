@@ -7,6 +7,7 @@ use App\Http\Requests\LocationRequest;
 use App\Models\Location;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
@@ -16,8 +17,10 @@ class LocationController extends Controller
     {
         $this->authorize('viewAny', Location::class);
 
+        $userId = Auth::id(); // get the currently authenticated user's ID
+
         return view('locations.location_index', [
-            'locations' => Location::filter()
+            'locations' => Location::where('user_id', $userId)
                 ->withCount([
                     'events',
                     'organizations',
