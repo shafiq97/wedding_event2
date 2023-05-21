@@ -14,16 +14,30 @@
     @else
         <x-nav.breadcrumb>{{ __('Events') }}</x-nav.breadcrumb>
     @endcan
-    <x-nav.breadcrumb/>
+    <x-nav.breadcrumb />
 @endsection
 
 @section('headline-buttons')
     @can('update', $service)
-        <x-button.edit href="{{ route('events.edit', $service) }}"/>
+        <x-button.edit href="{{ route('events.edit', $service) }}" />
     @endcan
 @endsection
 
 @section('content')
+    @if ($review)
+        <div class="card my-3">
+            <div class="card-header">
+                Review by User #{{ $review->user_id }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Rating: {{ $review->rating }}</h5>
+                <p class="card-text">{{ $review->content }}</p>
+                @if ($review->image)
+                    <img src="{{ asset($review->image) }}" alt="Review Image" class="img-fluid">
+                @endif
+            </div>
+        </div>
+    @endif
     @isset($service->eventSeries)
         <span class="badge bg-primary">
             <span>
@@ -31,7 +45,7 @@
                 {{ __('Part of the venue series') }}
             </span>
             <a class="link-light"
-               href="{{ route('event-series.show', $service->eventSeries->slug) }}">{{ $service->eventSeries->name }}</a>
+                href="{{ route('event-series.show', $service->eventSeries->slug) }}">{{ $service->eventSeries->name }}</a>
         </span>
     @endisset
     @isset($service->parentEvent)
@@ -41,7 +55,7 @@
                 {{ __('Part of the event') }}
             </span>
             <a class="link-light"
-               href="{{ route('events.show', $service->parentEvent) }}">{{ $service->parentEvent->name }}</a>
+                href="{{ route('events.show', $service->parentEvent) }}">{{ $service->parentEvent->name }}</a>
         </span>
     @endisset
 
@@ -62,7 +76,7 @@
                 </div>
             @endcan
 
-            @if($service->subEvents->count() > 0 || Auth::user()?->can('createChild', $service))
+            @if ($service->subEvents->count() > 0 || Auth::user()?->can('createChild', $service))
                 @include('events.shared.event_list', [
                     'events' => $service->subEvents,
                 ])
@@ -77,5 +91,5 @@
             @endif
         </div>
     </div>
-    <x-text.updated-human-diff :model="$service"/>
+    <x-text.updated-human-diff :model="$service" />
 @endsection

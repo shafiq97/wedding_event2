@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
 use App\Http\Requests\Filters\EventFilterRequest;
+use App\Models\Review;
 use App\Models\Venue;
 use App\Models\ServiceSeries;
 use App\Models\Location;
@@ -65,6 +66,8 @@ class EventController extends Controller
     public function show(Venue $service): View
     {
         $this->authorize('view', $service);
+    
+        $review = Review::where('service_id', $service->id)->first();
 
         return view('events.event_show', [
             'service' => $service->loadMissing([
@@ -73,8 +76,10 @@ class EventController extends Controller
                 ]),
                 'subEvents.location',
             ]),
+            'review' => $review,
         ]);
     }
+    
 
     public function create(): View
     {
