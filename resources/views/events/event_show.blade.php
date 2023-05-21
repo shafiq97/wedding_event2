@@ -24,20 +24,17 @@
 @endsection
 
 @section('content')
-    @if ($review)
-        <div class="card my-3">
-            <div class="card-header">
-                Review by User #{{ $review->user_id }}
+    <div style="height: 400px; overflow-y: auto;">
+        @foreach ($reviews as $review)
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Rating: {{ $review->rating }} By User #{{ $review->user_id }}</h5>
+                    <p class="card-text">Comment: {{ $review->comment }}</p>
+                    <img src="{{ Storage::url($review->image_path) }}" alt="Review Image">
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">Rating: {{ $review->rating }}</h5>
-                <p class="card-text">{{ $review->content }}</p>
-                @if ($review->image)
-                    <img src="{{ asset($review->image) }}" alt="Review Image" class="img-fluid">
-                @endif
-            </div>
-        </div>
-    @endif
+        @endforeach
+    </div>
     @isset($service->eventSeries)
         <span class="badge bg-primary">
             <span>

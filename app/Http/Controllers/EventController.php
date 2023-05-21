@@ -63,12 +63,13 @@ class EventController extends Controller
     }
 
 
+
     public function show(Venue $service): View
     {
         $this->authorize('view', $service);
     
-        $review = Review::where('service_id', $service->id)->first();
-
+        $reviews = Review::where('service_id', $service->id)->get();
+    
         return view('events.event_show', [
             'service' => $service->loadMissing([
                 'bookingOptions' => static fn(HasMany $query) => $query->withCount([
@@ -76,7 +77,7 @@ class EventController extends Controller
                 ]),
                 'subEvents.location',
             ]),
-            'review' => $review,
+            'reviews' => $reviews,
         ]);
     }
     
@@ -97,7 +98,7 @@ class EventController extends Controller
         }
 
         $service          = new Venue();
-        $service->user_id = Auth::id(); // Set the user_id of the current user
+        $service->user_id = Auth::id();
         if ($service->fillAndSave($request->validated())) {
             Session::flash('success', __('Created successfully.'));
             if ($request->hasFile('images')) {
