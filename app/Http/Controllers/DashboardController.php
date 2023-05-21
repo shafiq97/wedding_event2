@@ -22,8 +22,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request): View
     {
-
-        $services = Venue::query()
+        $venues = Venue::query()
             ->leftJoin('reviews', 'venues.id', '=', 'reviews.service_id')
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
@@ -34,13 +33,13 @@ class DashboardController extends Controller
 
         /** @var ?\App\Models\User $user */
         $user = Auth::user();
-        if($user){
+        if ($user) {
             if ($user->userRoles()->pluck('name')->contains('Landscaper')) {
-                $services = $services->where('venues.user_id', $user->id);
+                $venues = $venues->where('venues.user_id', $user->id);
             }
         }
 
-        $services->when($request->has('q'), function ($query) use ($request) {
+        $venues->when($request->has('q'), function ($query) use ($request) {
             $q = $request->input('q');
             $query
                 // ->join('users', 'venues.user_id', '=', 'users.id')
@@ -50,11 +49,19 @@ class DashboardController extends Controller
                 ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'));
         })
 
+            // Here is the new state filter
+            ->when($request->has('states'), function ($query) use ($request) {
+                $states = $request->input('states');
+                // dd($states);
+                $query->whereIn('locations.city', $states); // Changed this line
+            })
+
+
             ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
             ->groupBy('venues.id');
 
 
-        $events = $services->get();
+        $events = $venues->get();
 
 
         /** @var ?User $user */
@@ -75,6 +82,7 @@ class DashboardController extends Controller
         ]);
     }
 
+
     public function booking_index(Request $request): View
     {
         // $events = Venue::query()
@@ -83,7 +91,7 @@ class DashboardController extends Controller
         //     ->orderBy('started_at')
         //     ->limit(10)
         //     ->get();
-        $services = Venue::query()
+        $venues = Venue::query()
             ->leftJoin('reviews', 'venues.id', '=', 'reviews.service_id')
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
@@ -92,7 +100,7 @@ class DashboardController extends Controller
             ->groupBy('venues.id');
 
 
-        $services->when($request->has('q'), function ($query) use ($request) {
+        $venues->when($request->has('q'), function ($query) use ($request) {
             $q = $request->input('q');
             $query
                 // ->join('users', 'venues.user_id', '=', 'users.id')
@@ -106,7 +114,7 @@ class DashboardController extends Controller
             ->groupBy('venues.id');
 
 
-        $events = $services->get();
+        $events = $venues->get();
 
 
 
@@ -213,7 +221,7 @@ class DashboardController extends Controller
             ->first();
 
 
-        $services = Venue::query()
+        $venues = Venue::query()
             ->leftJoin('reviews', 'venues.id', '=', 'reviews.service_id')
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
@@ -228,13 +236,13 @@ class DashboardController extends Controller
 
         // dd($service->service_rating);
         $total = 0;
-        foreach ($services as $service) {
+        foreach ($venues as $service) {
             $total = $total + $service->service_rating;
         }
-        $count      = $services->count();
-        if($count == 0){
+        $count = $venues->count();
+        if ($count == 0) {
             $avg_rating = 0;
-        }else{
+        } else {
             $avg_rating = $total / $count;
         }
 
@@ -263,7 +271,7 @@ class DashboardController extends Controller
             'total_sales' => $total_sales,
             'avg_rating' => $avg_rating,
             'chats' => $chats,
-            'services' => $services,
+            'services' => $venues,
             'bookings' => $bookings
         ]);
     }

@@ -5,6 +5,30 @@
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Venue[] $events */
 @endphp
 
+
+@php
+    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Booking[] $bookings */
+    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Venue[] $events */
+    $states = [
+        'Johor',
+        'Kedah',
+        'Kelantan',
+        'Melaka',
+        'Negeri Sembilan',
+        'Pahang',
+        'Perak',
+        'Perlis',
+        'Penang',
+        'Sabah',
+        'Sarawak',
+        'Selangor',
+        'Terengganu',
+        'Federal Territory of Kuala Lumpur',
+        'Federal Territory of Labuan',
+        'Federal Territory of Putrajaya',
+    ];
+@endphp
+
 @section('title')
     {{ __('Dashboard') }}
 @endsection
@@ -18,10 +42,17 @@
                         placeholder="{{ __('Search by venues, description and vendor') }}">
                     <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
                 </div>
+
+                @foreach ($states as $state)
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ $state }}" name="states[]" id="{{ $state }}">
+                        <label class="form-check-label" for="{{ $state }}">
+                            {{ $state }}
+                        </label>
+                    </div>
+                @endforeach
             </form>
         </div>
-    </div>
-
     <div class="row">
         <div class="col-12 col-md-12">
             <h2>{{ __('My Venue List') }}</h2>
