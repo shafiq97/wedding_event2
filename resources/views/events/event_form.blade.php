@@ -66,29 +66,10 @@
                     <x-form.label for="location_id">{{ __('Location') }}</x-form.label>
                     <x-form.select name="location_id" :options="$locations->pluck('nameOrAddress', 'id')" :value="$service->location_id ?? null" />
                 </x-form.row>
-                {{-- <x-form.row>
-                    <x-form.label for="organization_id">{{ __('Options') }}</x-form.label>
-                    <x-form.input id="organization_id" name="organization_id[]" type="checkbox" :options="$organizations->pluck('name', 'id')"
-                        :value="isset($service) ? $service->organizations->pluck('id')->toArray() : []" :valuesToInt="true" />
-                </x-form.row> --}}
-                {{-- <x-form.row>
-                    <x-form.label for="parent_event_id">{{ __('Part of the venue') }}</x-form.label>
-                    <x-form.select name="parent_event_id" :options="$services->except($service->id ?? null)->pluck('name', 'id')" :value="$service->parent_event_id ?? null">
-                        <option value="">{{ __('none') }}</option>
-                    </x-form.select>
-                </x-form.row>
-                <x-form.row>
-                    <x-form.label for="event_series_id">{{ __('Part of the venue series') }}</x-form.label>
-                    <x-form.select name="event_series_id" :options="$eventSeries->pluck('name', 'id')" :value="$service->event_series_id ?? null">
-                        <option value="">{{ __('none') }}</option>
-                    </x-form.select>
-                </x-form.row> --}}
                 <x-form.row>
                     <x-form.label for="images">{{ __('Images') }}</x-form.label>
                     <x-form.input name="images[]" type="file" accept="image/*" id="image-input" multiple />
                 </x-form.row>
-
-
                 <x-form.row>
                     <x-form.label>{{ __('ImagePreview') }}</x-form.label>
                     {{-- <img src="{{ asset('storage/'.$service->image) }}" width="200" alt="Image"> --}}
@@ -99,7 +80,6 @@
                         <div id="image-preview"></div>
                     @endif
                 </x-form.row>
-
                 @push('scripts')
                     <script>
                         const input = document.querySelector('#image-input');

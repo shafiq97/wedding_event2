@@ -22,6 +22,7 @@ class EventController extends Controller
     public function index(EventFilterRequest $request): View
     {
         $this->authorize('viewAny', Venue::class);
+        $user = Auth::user();
 
         $venues = Venue::filter()
             ->with([
@@ -147,11 +148,15 @@ class EventController extends Controller
 
     private function formValuesForFilter(array $values = []): array
     {
+        $userId = Auth::id(); // get the currently authenticated user's ID
+
         return array_replace([
             'eventSeries' => ServiceSeries::query()
                 ->orderBy('name')
                 ->get(),
             'locations' => Location::query()
+                ->where('user_id', $userId) // filter the locations by the user_id
+
                 ->orderBy('name')
                 ->get(),
             'organizations' => Organization::query()
