@@ -41,6 +41,7 @@ class LocationController extends Controller
         // $this->authorize('create', User::class);
 
         $location = new Location();
+        $location->user_id = Auth::id(); 
         if ($location->fillAndSave($request->validated())) {
             Session::flash('success', __('Created successfully.'));
             return redirect(route('locations.edit', $location));

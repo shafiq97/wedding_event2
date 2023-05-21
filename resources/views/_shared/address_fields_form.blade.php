@@ -27,7 +27,7 @@
     </div>
     <div class="col-12 col-md-8">
         <x-form.row>
-            <x-form.label for="city">{{ __('City') }}</x-form.label>
+            <x-form.label for="city">{{ __('State') }}</x-form.label>
             <x-form.input name="city" type="text"
                           :value="$address->city ?? null" />
         </x-form.row>
