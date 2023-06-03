@@ -42,6 +42,7 @@ class LocationController extends Controller
 
         $location = new Location();
         $location->user_id = Auth::id(); 
+        $location->state = $request->input('state');
         if ($location->fillAndSave($request->validated())) {
             Session::flash('success', __('Created successfully.'));
             return redirect(route('locations.edit', $location));
@@ -62,7 +63,7 @@ class LocationController extends Controller
     public function update(Location $location, LocationRequest $request): RedirectResponse
     {
         $this->authorize('update', $location);
-
+        $location->state = $request->input('state');
         if ($location->fillAndSave($request->validated())) {
             Session::flash('success', __('Saved successfully.'));
         }

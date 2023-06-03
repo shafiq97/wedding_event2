@@ -27,14 +27,14 @@
     </div>
     <div class="col-12 col-md-8">
         <x-form.row>
-            <x-form.label for="city">{{ __('State') }}</x-form.label>
+            <x-form.label for="city">{{ __('City') }}</x-form.label>
             <x-form.input name="city" type="text"
                           :value="$address->city ?? null" />
         </x-form.row>
     </div>
 </div>
-{{-- <x-form.row>
-    <x-form.label for="country">{{ __('Country') }}</x-form.label>
-    <x-form.input name="country" type="text"
-                  :value="$address->country ?? null" />
-</x-form.row> --}}
+<x-form.row>
+    <x-form.label for="state">{{ __('State') }}</x-form.label>
+    <x-form.input name="state" type="text"
+                  :value="$address->state ?? null" />
+</x-form.row>

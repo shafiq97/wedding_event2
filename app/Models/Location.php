@@ -15,6 +15,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 /**
  * @property-read int $id
  * @property int $user_id
+ * @property string $state
  * @property string $name
  *
  * @property-read string[] $fullAddressBlock {@see Location::fullAddressBlock()}
@@ -41,7 +42,7 @@ class Location extends Model
         'house_number',
         'postal_code',
         'city',
-        'country',
+        'state',
         'website_url',
         'user_id'
     ];
@@ -50,16 +51,17 @@ class Location extends Model
 
     public function fullAddressBlock(): Attribute
     {
-        return new Attribute(fn () => array_merge(
+        return new Attribute(fn() => array_merge(
             isset($this->name) ? [$this->name] : [],
             $this->addressBlock
-        ));
+        )
+        );
     }
 
     public function nameOrAddress(): Attribute
     {
-        return new Attribute(fn () => $this->name
-                                      ?? sprintf('%s, %s', $this->streetLine, $this->city));
+        return new Attribute(fn() => $this->name
+            ?? sprintf('%s, %s', $this->streetLine, $this->city));
     }
 
     public function events(): HasMany
