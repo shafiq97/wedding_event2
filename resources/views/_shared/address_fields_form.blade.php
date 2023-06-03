@@ -10,7 +10,7 @@
     <x-form.label for="state">{{ __('State') }}</x-form.label>
     <select name="state" id="state" class="form-control">
         @foreach ($states as $state)
-            <option value="{{ $state }}" {{ $address->state == $state ? 'selected' : '' }}>
+            <option value="{{ $state }}" {{ $address?->state == $state ? 'selected' : '' }}>
                 {{ $state }}
             </option>
         @endforeach
@@ -45,13 +45,13 @@
         </x-form.row>
     </div>
 </div>
-<x-form.row>
+{{-- <x-form.row>
     <x-form.label for="state">{{ __('State') }}</x-form.label>
     <select name="state" id="state" class="form-control">
         @foreach ($states as $state)
-            <option value="{{ $state }}" {{ $address->state == $state ? 'selected' : '' }}>
-                {{ $state }}
+        <option value="{{ $state }}" {{ $address?->state == $state ? 'selected' : '' }}>
+            {{ $state }}
             </option>
         @endforeach
     </select>
-</x-form.row>
+</x-form.row> --}}

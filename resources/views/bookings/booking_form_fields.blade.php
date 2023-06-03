@@ -139,7 +139,7 @@
         if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
             var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
             var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            numOfDaysInput.value = diffDays;
+            numOfDaysInput.value = diffDays + 1;
         } else {
             numOfDaysInput.value = ''; // clear the input if dates are not valid
         }

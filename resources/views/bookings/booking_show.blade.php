@@ -149,13 +149,11 @@
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="booked_date_from">{{ __('Booked from') }}</x-form.label>
-                    <x-form.input readonly disabled name="booked_date_from"
-                        value="{{ $booking->booked_date_from ?? null }}" />
+                    <x-form.input readonly disabled name="booked_date_from" value="{{ $booking->booked_date_from ?? null }}" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="booked_date_until">{{ __('Booked until') }}</x-form.label>
-                    <x-form.input readonly disabled name="review"
-                        value="{{ $booking->booked_date_until ?? null }}" />
+                    <x-form.input readonly disabled name="review" value="{{ $booking->booked_date_until ?? null }}" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="reviews">{{ __('Review') }}</x-form.label>
@@ -167,7 +165,7 @@
                     <x-form.input readonly disabled name="rating"
                         value="{{ $booking->reviews()->first()->rating ?? null }}" />
                 </x-form.row>
-              
+
                 @isset($booking)
                     <x-form.row>
                         <form action="{{ route('payment.index', $booking->id) }}" method="get">
@@ -175,10 +173,15 @@
                             <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                             <input type="hidden" name="amount" value="{{ $booking->price }}">
                             <input type="hidden" name="payment_method" value="Credit Card">
-                            <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
+                            @if ($booking->paid_at)
+                                <button type="button" class="btn btn-success">{{ __('Paid') }}</button>
+                            @else
+                                <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
+                            @endif
                         </form>
                     </x-form.row>
                 @endisset
+
             @endisset
         </div>
     </div>
