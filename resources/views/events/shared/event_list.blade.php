@@ -41,8 +41,11 @@
                                     <span>&#9734;</span> <!-- this is an empty star character -->
                                 @endfor
                             </div>
-                            <button style="background: none; border: none;" class="wishlist-button"
-                                data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
+                            @auth
+                                <button style="background: none; border: none;"
+                                    class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
+                                    data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
+                            @endauth
                         </div>
                     </div>
                     @if ($service->images->count() > 0)
@@ -96,16 +99,37 @@
             button.addEventListener('click', function(event) {
                 event.preventDefault();
                 const serviceId = this.getAttribute('data-service-id');
+                const isAdded = this.classList.contains('added');
 
-                if (this.classList.contains('added')) {
-                    console.log("Removed from wishlist: " + serviceId);
-                    alert("Removed from wishlist");
-                    this.classList.remove('added');
-                } else {
-                    console.log("Added to wishlist: " + serviceId);
-                    alert("Added to wishlist");
-                    this.classList.add('added');
-                }
+                const form = document.createElement('form');
+                form.action = isAdded ? '{{ route('wishlist.remove') }}' :
+                    '{{ route('wishlist.add') }}';
+                form.method = 'POST';
+                form.style.display = 'none';
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content');
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken;
+
+                const serviceIdInput = document.createElement('input');
+                serviceIdInput.type = 'hidden';
+                serviceIdInput.name = 'service_id';
+                serviceIdInput.value = serviceId;
+
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = isAdded ? 'DELETE' : 'POST';
+
+                form.appendChild(csrfInput);
+                form.appendChild(serviceIdInput);
+                form.appendChild(methodInput);
+
+                document.body.appendChild(form);
+                form.submit();
             });
         });
     });

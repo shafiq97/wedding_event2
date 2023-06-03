@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 

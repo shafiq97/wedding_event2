@@ -121,7 +121,7 @@ class Venue extends Model
             $image       = $validatedData['image'];
             $filename    = $image->storePublicly('landscape', 'public');
             $this->image = $filename;
-        }else{
+        } else {
             // dd('hehe');
         }
 
@@ -160,5 +160,9 @@ class Venue extends Model
         return $this->hasMany(Image::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'wishlist_venues', 'service_id', 'user_id')->withTimestamps();
+    }
 
 }

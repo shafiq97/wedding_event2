@@ -208,4 +208,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'first_name',
         ];
     }
+
+    public function wishlist()
+    {
+        return $this->belongsToMany(Venue::class, 'wishlist_venues', 'user_id', 'service_id')->withTimestamps();
+    }
+
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Booking;
 use App\Models\BookingOption;
 use App\Models\Venue;
@@ -126,6 +127,15 @@ Route::get('/reports', [DashboardController::class, 'landscaper_report'])->name(
 // Payment
 Route::get('payment/{booking}', [PaymentController::class, 'index'])->name('payment.index');
 Route::post('payment/{booking}', [PaymentController::class, 'process'])->name('payment.process');
+
+// wishlist
+Route::middleware('auth')->group(function () {
+     Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
+     Route::delete('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+ });
+ 
+
 
 
 require __DIR__ . '/auth.php';
