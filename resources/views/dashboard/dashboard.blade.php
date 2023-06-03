@@ -3,24 +3,7 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Booking[] $bookings */
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Venue[] $events */
-    $states = [
-        'Johor',
-        'Kedah',
-        'Kelantan',
-        'Melaka',
-        'Negeri Sembilan',
-        'Pahang',
-        'Perak',
-        'Perlis',
-        'Penang',
-        'Sabah',
-        'Sarawak',
-        'Selangor',
-        'Terengganu',
-        'Federal Territory of Kuala Lumpur',
-        'Federal Territory of Labuan',
-        'Federal Territory of Putrajaya',
-    ];
+    $states = ['Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan', 'Pahang', 'Perak', 'Perlis', 'Penang', 'Sabah', 'Sarawak', 'Selangor', 'Terengganu', 'Federal Territory of Kuala Lumpur', 'Federal Territory of Labuan', 'Federal Territory of Putrajaya'];
 @endphp
 
 @section('title')
@@ -34,31 +17,35 @@
             <form action="{{ route('dashboard') }}" method="GET">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="q"
-                        placeholder="{{ __('Search by venues, description and vendor') }}">
+                        placeholder="{{ __('Search by venues, description and vendor') }}" value="{{ request()->get('q') }}">
                     <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
                     <a href="/" class="btn btn-warning" type="button">{{ __('Reset') }}</a>
                 </div>
-        
+
                 <div class="form-group mb-3">
                     <label for="rating">{{ __('Filter by rating') }}</label>
                     <select class="form-control" id="rating" name="rating">
                         <option value="">Select rating</option>
                         @for ($i = 1; $i <= 5; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
+                            <option value="{{ $i }}" {{ request()->get('rating') == $i ? 'selected' : '' }}>
+                                {{ $i }}</option>
                         @endfor
                     </select>
                 </div>
-        
-                @foreach ($states as $state)
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{ $state }}" name="states[]" id="{{ $state }}">
-                        <label class="form-check-label" for="{{ $state }}">
-                            {{ $state }}
-                        </label>
-                    </div>
-                @endforeach
+
+                <div class="form-group mb-3">
+                    <label for="states">{{ __('Filter by State') }}</label>
+                    <select class="form-control" id="states" name="states[]" multiple>
+                        @foreach ($states as $state)
+                            <option value="{{ $state }}"
+                                {{ in_array($state, request()->get('states') ?? []) ? 'selected' : '' }}>
+                                {{ $state }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </form>
-        </div>        
+        </div>
         <div class="col-md-8">
             <div class="row">
                 <div class="col-12 col-md-12">

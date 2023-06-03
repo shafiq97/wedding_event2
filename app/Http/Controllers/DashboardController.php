@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ->leftJoin('images', 'venues.id', '=', 'images.venue_id')
             ->leftJoin('locations', 'venues.location_id', '=', 'locations.id')
             ->where('venues.visibility', '=', Visibility::Public ->value)
-            ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', 'locations.city as city') // add locations.city to the select
+            ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', 'locations.state as state')
             ->groupBy('venues.id');
 
         /** @var ?\App\Models\User $user */
@@ -48,10 +48,9 @@ class DashboardController extends Controller
                         ->orWhere('venues.name', 'like', "%$q%")
                         ->orWhere('venues.description', 'like', "%$q%");
                 })
-                ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'locations.city as city'); // add locations.city to the select
-        })->when($request->has('states'), function ($query) use ($request) {
+                ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'locations.state as state');
             $states = $request->input('states');
-            $query->whereIn('locations.city', $states); // check locations.city instead of venues.city
+            $query->whereIn('locations.state', $states);
         })
 
 

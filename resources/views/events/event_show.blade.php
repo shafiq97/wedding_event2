@@ -24,17 +24,6 @@
 @endsection
 
 @section('content')
-    <div style="height: 400px; overflow-y: auto;">
-        @foreach ($reviews as $review)
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Rating: {{ $review->rating }} By User #{{ $review->user_id }}</h5>
-                    <p class="card-text">Comment: {{ $review->comment }}</p>
-                    <img src="{{ Storage::url($review->image_path) }}" alt="Review Image">
-                </div>
-            </div>
-        @endforeach
-    </div>
     @isset($service->eventSeries)
         <span class="badge bg-primary">
             <span>
@@ -51,8 +40,7 @@
                 <i class="fa fa-fw fa-calendar-days"></i>
                 {{ __('Part of the event') }}
             </span>
-            <a class="link-light"
-                href="{{ route('events.show', $service->parentEvent) }}">{{ $service->parentEvent->name }}</a>
+            <a class="link-light" href="{{ route('events.show', $service->parentEvent) }}">{{ $service->parentEvent->name }}</a>
         </span>
     @endisset
 
@@ -87,6 +75,17 @@
                 @endcan
             @endif
         </div>
+    </div>
+    <div style="height: 400px; overflow-y: auto;">
+        @foreach ($reviews as $review)
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Rating: {{ $review->rating }} By User #{{ $review->user_id }}</h5>
+                    <p class="card-text">Comment: {{ $review->comment }}</p>
+                    <img src="{{ Storage::url($review->image_path) }}" alt="Review Image">
+                </div>
+            </div>
+        @endforeach
     </div>
     <x-text.updated-human-diff :model="$service" />
 @endsection
