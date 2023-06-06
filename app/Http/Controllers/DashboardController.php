@@ -49,22 +49,20 @@ class DashboardController extends Controller
                         ->orWhere('venues.description', 'like', "%$q%");
                 })
                 ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'locations.state as state');
-            $states = $request->input('states');
-            $query->whereIn('locations.state', $states);
         })
-
-
-
+            ->when($request->has('states'), function ($query) use ($request) {
+                $states = $request->input('states');
+                $query->whereIn('locations.state', $states);
+            })
             ->select('venues.*', 'users.first_name as user_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
             ->groupBy('venues.id');
 
-        $venues->when($request->has('rating'), function ($query) use ($request) {
+        $venues->when($request->filled('rating'), function ($query) use ($request) {
             $rating = $request->input('rating');
             $query->havingRaw('COALESCE(AVG(reviews.rating), 0) = ?', [$rating]);
         });
 
         $events = $venues->get();
-
 
         /** @var ?User $user */
         $user = Auth::user();
@@ -83,6 +81,8 @@ class DashboardController extends Controller
             'events' => $events,
         ]);
     }
+
+
 
 
     public function booking_index(Request $request): View

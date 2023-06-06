@@ -34,16 +34,19 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="states">{{ __('Filter by State') }}</label>
-                    <select class="form-control" id="states" name="states[]" multiple>
-                        @foreach ($states as $state)
-                            <option value="{{ $state }}"
-                                {{ in_array($state, request()->get('states') ?? []) ? 'selected' : '' }}>
+                    <label>{{ __('Filter by State') }}</label>
+                    @foreach ($states as $state)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{ $state }}"
+                                id="{{ $state }}" name="states[]"
+                                {{ in_array($state, request()->get('states') ?? []) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="{{ $state }}">
                                 {{ $state }}
-                            </option>
-                        @endforeach
-                    </select>
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
+
             </form>
         </div>
         <div class="col-md-8">
