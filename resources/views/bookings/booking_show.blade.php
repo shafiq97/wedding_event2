@@ -143,10 +143,10 @@
                         </x-form.row>
                     </div>
                 </div>
-                <x-form.row>
+                {{-- <x-form.row>
                     <x-form.label for="country">{{ __('Country') }}</x-form.label>
                     <x-form.input readonly disabled name="country" value="{{ $booking->country ?? null }}" />
-                </x-form.row>
+                </x-form.row> --}}
                 <x-form.row>
                     <x-form.label for="booked_date_from">{{ __('Booked from') }}</x-form.label>
                     <x-form.input readonly disabled name="booked_date_from" value="{{ $booking->booked_date_from ?? null }}" />
