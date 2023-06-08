@@ -64,7 +64,6 @@
                                     class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
                                     data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
                             @endauth
-
                         </div>
                         <div class="card-body">
                             @if ($service->images->count() > 0)

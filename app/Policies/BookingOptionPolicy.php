@@ -120,7 +120,7 @@ class BookingOptionPolicy
      */
     public function delete(User $user, BookingOption $bookingOption): Response
     {
-        return $this->deny();
+        return $this->allow();
     }
 
     /**

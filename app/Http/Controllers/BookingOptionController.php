@@ -9,6 +9,9 @@ use App\Models\Form;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
+use App\Models\Booking;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class BookingOptionController extends Controller
 {
@@ -29,6 +32,42 @@ class BookingOptionController extends Controller
         return view('booking_options.booking_option_form', $this->formValues([
             'service' => $service,
         ]));
+    }
+
+    public function destroy(Venue $service, BookingOption $bookingOption): RedirectResponse
+    {
+        $this->authorize('delete', $bookingOption);
+
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            // Check if there are any bookings associated with the booking option
+            if (Booking::where('booking_option_id', $bookingOption->id)->exists()) {
+                throw new \Exception('Cannot delete the booking option because there are associated bookings.');
+            }
+
+            // Delete the booking option
+            $bookingOption->delete();
+
+            // Commit the transaction
+            DB::commit();
+
+            Session::flash('success', __('Deleted successfully.'));
+            return redirect(route('booking-options.index', $service));
+        } catch (\Exception $e) {
+            // Roll back the transaction in case of any exception
+            DB::rollBack();
+
+            // Handle the specific exception caused by the integrity constraint violation
+            if ($e instanceof \Illuminate\Database\QueryException && $e->getCode() === '23000') {
+                Session::flash('error', __('Cannot delete the booking option because there are associated bookings.'));
+            } else {
+                Session::flash('error', __('Cannot delete the booking option because there are associated bookings.'));
+            }
+
+            return back();
+        }
     }
 
     public function store(Venue $service, BookingOptionRequest $request): RedirectResponse
@@ -72,8 +111,8 @@ class BookingOptionController extends Controller
     {
         return array_replace([
             'forms' => Form::query()
-                            ->orderBy('name')
-                            ->get(),
+                ->orderBy('name')
+                ->get(),
         ], $values);
     }
 }

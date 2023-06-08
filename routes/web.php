@@ -106,7 +106,7 @@ Route::resource('events', EventController::class)
 
 Route::model('booking_option', BookingOption::class);
 Route::resource('events/{event:slug}/booking-options', BookingOptionController::class)
-     ->only(['show']);
+     ->only(['show', 'destroy']);
 
 Route::resource('events/{event:slug}/{booking_option:slug}/bookings', BookingController::class)
      ->only(['store']);
@@ -133,8 +133,8 @@ Route::middleware('auth')->group(function () {
      Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
      Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
      Route::delete('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
- });
- 
+});
+
 
 
 

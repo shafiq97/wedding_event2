@@ -22,18 +22,17 @@
             {{ $bookingOption->name }}
         </x-nav.breadcrumb>
     @endisset
-    <x-nav.breadcrumb/>
+    <x-nav.breadcrumb />
 @endsection
 
 @section('content')
     <x-form method="{{ isset($bookingOption) ? 'PUT' : 'POST' }}"
-            action="{{ isset($bookingOption) ? route('booking-options.update', [$service, $bookingOption]) : route('booking-options.store', $service) }}">
+        action="{{ isset($bookingOption) ? route('booking-options.update', [$service, $bookingOption]) : route('booking-options.store', $service) }}">
         <div class="row">
             <div class="col-12 col-md-6">
                 <x-form.row>
                     <x-form.label for="name">{{ __('Name') }}</x-form.label>
-                    <x-form.input name="name" type="text"
-                                  :value="$bookingOption->name ?? null"/>
+                    <x-form.input name="name" type="text" :value="$bookingOption->name ?? null" />
                 </x-form.row>
                 {{-- <x-form.row>
                     <x-form.label for="slug">{{ __('Slug') }}</x-form.label>
@@ -49,8 +48,7 @@
                 </x-form.row> --}}
                 <x-form.row>
                     <x-form.label for="description">{{ __('Description') }}</x-form.label>
-                    <x-form.input name="description" type="text"
-                                  :value="$bookingOption->description ?? null"/>
+                    <x-form.input name="description" type="text" :value="$bookingOption->description ?? null" />
                 </x-form.row>
             </div>
             <div class="col-12 col-md-6">
@@ -64,23 +62,23 @@
                 </x-form.row> --}}
                 <x-form.row>
                     <x-form.label for="maximum_bookings">{{ __('Maximum bookings') }}</x-form.label>
-                    <x-form.input name="maximum_bookings" type="number" min="1" step="1"
-                                  :value="$bookingOption->maximum_bookings ?? null"/>
+                    <x-form.input name="maximum_bookings" type="number" min="1" step="1" :value="$bookingOption->maximum_bookings ?? null" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="available_from">{{ __('Start date') }}</x-form.label>
-                    <x-form.input name="available_from" type="datetime-local"
-                                  :value="isset($bookingOption->available_from) ? $bookingOption->available_from->format('Y-m-d\TH:i') : null"/>
+                    <x-form.input name="available_from" type="datetime-local" :value="isset($bookingOption->available_from)
+                        ? $bookingOption->available_from->format('Y-m-d\TH:i')
+                        : null" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="available_until">{{ __('End date') }}</x-form.label>
-                    <x-form.input name="available_until" type="datetime-local"
-                                  :value="isset($bookingOption->available_until) ? $bookingOption->available_until->format('Y-m-d\TH:i') : null"/>
+                    <x-form.input name="available_until" type="datetime-local" :value="isset($bookingOption->available_until)
+                        ? $bookingOption->available_until->format('Y-m-d\TH:i')
+                        : null" />
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="price">{{ __('Price per Day') }}</x-form.label>
-                    <x-form.input name="price" type="number" min="0.01" step="0.01"
-                                  :value="$bookingOption->price ?? null"/>
+                    <x-form.input name="price" type="number" min="0.01" step="0.01" :value="$bookingOption->price ?? null" />
                 </x-form.row>
                 {{-- <x-form.row>
                     <x-form.label for="restrictions">{{ __('Restrictions') }}</x-form.label>
@@ -94,14 +92,23 @@
         <x-button.group>
             <x-button.save>
                 @isset($bookingOption)
-                    {{ __( 'Save' ) }}
+                    {{ __('Save') }}
                 @else
                     {{ __('Create') }}
                 @endisset
             </x-button.save>
-            <x-button.cancel href="{{ route('events.show', $service) }}"/>
+
+            <x-button.cancel href="{{ route('events.show', $service) }}" />
         </x-button.group>
     </x-form>
-
-    <x-text.timestamp :model="$bookingOption ?? null"/>
+    @isset($bookingOption)
+        <form action="{{ route('booking-options.destroy', [$service, $bookingOption]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <x-button.delete type="submit">
+                {{ __('Delete') }}
+            </x-button.delete>
+        </form>
+    @endisset
+    <x-text.timestamp :model="$bookingOption ?? null" />
 @endsection
