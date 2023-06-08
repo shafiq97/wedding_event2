@@ -52,7 +52,7 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-12 col-md-12">
-                    <h2>{{ __('My Venue List') }}</h2>
+                    <h2>{{ __('Venue List') }}</h2>
                     @include('events.shared.event_list', [
                         'events' => $events,
                         'showVisibility' => false,

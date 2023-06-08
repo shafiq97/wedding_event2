@@ -14,6 +14,10 @@
         @endif
         <h1>Payment</h1>
 
+        <div>
+            <img src="{{ asset('storage/qrpayment.jpeg') }}">
+        </div>
+
         <!-- Add enctype attribute to your form tag -->
         <form action="{{ route('payment.process', $booking->id) }}" method="post" enctype="multipart/form-data">
             @csrf
