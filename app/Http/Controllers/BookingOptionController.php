@@ -54,7 +54,7 @@ class BookingOptionController extends Controller
             DB::commit();
 
             Session::flash('success', __('Deleted successfully.'));
-            return redirect(route('booking-options.index', $service));
+            return redirect(route('dashboard'));
         } catch (\Exception $e) {
             // Roll back the transaction in case of any exception
             DB::rollBack();
@@ -63,12 +63,13 @@ class BookingOptionController extends Controller
             if ($e instanceof \Illuminate\Database\QueryException && $e->getCode() === '23000') {
                 Session::flash('error', __('Cannot delete the booking option because there are associated bookings.'));
             } else {
-                Session::flash('error', __('Cannot delete the booking option because there are associated bookings.'));
+                Session::flash('error', __('An error occurred while deleting the booking option.'));
             }
 
-            return back();
+            return redirect(route('dashboard'));
         }
     }
+
 
     public function store(Venue $service, BookingOptionRequest $request): RedirectResponse
     {

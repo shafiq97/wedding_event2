@@ -107,6 +107,9 @@ Route::resource('events', EventController::class)
 Route::model('booking_option', BookingOption::class);
 Route::resource('events/{event:slug}/booking-options', BookingOptionController::class)
      ->only(['show', 'destroy']);
+Route::delete('events/{event:slug}/booking-options/{booking_option:slug}', [BookingOptionController::class, 'destroy'])
+     ->name('booking-options.destroy');
+
 
 Route::resource('events/{event:slug}/{booking_option:slug}/bookings', BookingController::class)
      ->only(['store']);
