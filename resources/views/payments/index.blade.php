@@ -12,10 +12,13 @@
                 </ul>
             </div>
         @endif
-        <h1>Payment</h1>
+        <h1>Make With Payment</h1>
 
         <div>
             <img src="{{ asset('storage/qrpayment.jpeg') }}">
+        </div>
+        <div class="mt-2 mb-2">
+            <h3>Account No: 12195020252755</h3>
         </div>
 
         <!-- Add enctype attribute to your form tag -->
@@ -25,8 +28,8 @@
             <label for="">Total RM</label><br>
             <input type="text" readonly name="amount" value="{{ $booking->price }}">
             <br><br>
-            <label for="">Payment method</label> <br>
-            <input type="text" name="payment_method" value="Credit Card">
+            {{-- <label for="">Payment method</label> <br> --}}
+            <input type="hidden" name="payment_method" value="Qr">
             <br><br>
 
             <!-- Add this to your form fields -->
