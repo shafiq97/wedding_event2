@@ -20,6 +20,16 @@
     .empty-star {
         color: black;
     }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-header .left {
+        flex-grow: 1;
+    }
 </style>
 
 @if ($events->count() === 0)
@@ -32,31 +42,33 @@
     <div class="list-group">
         @foreach ($events as $service)
             @can('view', $service)
-                <div class="card mb-3">
-                    <a href="{{ route('events.show', $service->slug) }}">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ $service->name }}</h2>
-                            <p class="card-text">by <a
-                                    href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    @for ($i = 0; $i < $service->service_rating; $i++)
-                                        <span class="rating-star">&#9733;</span> <!-- this is a star character -->
-                                    @endfor
-                                    @for ($i = $service->service_rating; $i < 5; $i++)
-                                        <span class="empty-star">&#9734;</span> <!-- this is an empty star character -->
-                                    @endfor
-                                </div>
-                                @auth
-                                    <button style="background: none; border: none;"
-                                        class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
-                                        data-service-id="{{ $service->id }}">
-                                        <i class="fa fa-heart"></i>
-                                    </button>
-                                @endauth
+                <a href="{{ route('events.show', $service->slug) }}">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div class="left">
+                                <h2 class="card-title">{{ $service->name }}</h2>
+                                <p class="card-text">by <a
+                                        href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
+                                </p>
                             </div>
+                            <div>
+                                @for ($i = 0; $i < $service->service_rating; $i++)
+                                    <span class="rating-star">&#9733;</span>
+                                @endfor
+                                @for ($i = $service->service_rating; $i < 5; $i++)
+                                    <span class="empty-star">&#9734;</span>
+                                @endfor
+                            </div>
+                            @auth
+                                <button style="background: none; border: none;"
+                                    class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
+                                    data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
+                            @endauth
+
+                        </div>
+                        <div class="card-body">
                             @if ($service->images->count() > 0)
+                                <!-- Carousel for images -->
                                 <div id="carousel{{ $service->id }}" class="carousel slide mt-2" data-bs-ride="carousel">
                                     <div class="carousel-inner">
                                         @foreach ($service->images as $image)
@@ -78,25 +90,31 @@
                                     </button>
                                 </div>
                             @endif
-
-                            <p><i class="fa fa-fw fa-location-pin"></i> {{ $service->location->nameOrAddress }}</p>
-
+                            <!-- Location -->
+                            <p class="location-text">
+                                <i class="fa fa-fw fa-location-pin location-icon"></i>
+                                {{ $service->location->nameOrAddress }}
+                            </p>
                             @if ($showVisibility)
-                                <p>
+                                <div>
                                     <i class="fa fa-fw fa-eye" title="{{ __('Visibility') }}"></i>
                                     <x-badge.visibility :visibility="$service->visibility" />
-                                </p>
+                                </div>
                             @endif
-
-                            <p class="card-text text-muted">{{ $service->description }}</p>
-                            <p class="card-text text-muted">Price from RM{{ $service->min_price }}</p>
+                            <div class="text-muted">
+                                {{ $service->description }}
+                            </div>
+                            <div class="text-muted">
+                                Price from RM{{ $service->min_price }}
+                            </div>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
             @endcan
         @endforeach
     </div>
 @endif
+
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
         const wishlistButtons = document.querySelectorAll('.wishlist-button');
