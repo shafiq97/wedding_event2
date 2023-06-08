@@ -30,7 +30,6 @@
             <br><br>
             {{-- <label for="">Payment method</label> <br> --}}
             <input type="hidden" name="payment_method" value="Qr">
-            <br><br>
 
             <!-- Add this to your form fields -->
             <label for="receipt">Upload Receipt (PDF or Image)</label><br>
