@@ -49,11 +49,12 @@
                     </p>
                 @endif
             @endauth
-            {{-- 
+
             @if (!isset($bookingOption->available_from) || $bookingOption->available_from->isFuture())
                 <p class="alert alert-danger">
-                    {{ __('Bookings are not possible yet.') }}
-                </p> --}}
+                    {{ __('Bookings are not possible yet due to selected date is not in the booking period.') }}
+                </p>
+            @endif
             {{-- @elseif(isset($bookingOption->available_until) && $bookingOption->available_until->isPast())
                 <p class="alert alert-danger">
                     {{ __('The booking period ended at :date.', ['date' => formatDateTime($bookingOption->available_until)]) }}
