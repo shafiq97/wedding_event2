@@ -6,7 +6,7 @@
 
 <style>
     .wishlist-button .fa-heart {
-        color: white;
+        color: black;
     }
 
     .wishlist-button.added .fa-heart {
