@@ -15,7 +15,7 @@
             </div>
         @endif
         <h1>Bookings</h1>
-        <table class="table table-striped">
+        <table id="bookings-table" class="table table-striped">
             <thead>
                 <tr>
                     <th>Booking ID</th>
@@ -56,4 +56,12 @@
             </tbody>
         </table>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#bookings-table').DataTable();
+        });
+    </script>
 @endsection

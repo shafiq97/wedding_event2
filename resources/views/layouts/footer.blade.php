@@ -12,8 +12,8 @@
                 <div class="row">
                     <p>
                         {{ 'Seamless Booking experience!
-
-' }}
+                        
+                        ' }}
                     </p>
                 </div>
                 <div class="row">
