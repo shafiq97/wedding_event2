@@ -128,6 +128,12 @@
                                                 {{ __('Reports') }}
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('payments.show') }}">
+                                                <i class="fa fa-fw fa-credit-card"></i>
+                                                {{ __('Payments') }}
+                                            </a>
+                                        </li>
                                     @endif
 
                                 </ul>

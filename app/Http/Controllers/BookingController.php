@@ -35,7 +35,7 @@ class BookingController extends Controller
         $bookingOption->load([
             'form.formFieldGroups.formFields',
         ]);
-        
+
         $bookingsQuery = Booking::filter($bookingOption->bookings())
             ->with([
                 'bookedByUser',
@@ -71,6 +71,32 @@ class BookingController extends Controller
                 'bookingOption.form.formFieldGroups.formFields',
             ]),
         ]);
+    }
+
+    public function approve_payment($bookingId): RedirectResponse
+    {
+        $booking = Booking::findOrFail($bookingId);
+
+        // Check if the booking has a payment and if the payment has a receipt
+        if ($booking->payment && $booking->payment->receipt) {
+            // Update the 'paid_at' field to the current datetime
+            $booking->paid_at = now();
+            $booking->save();
+
+            return redirect()->route('payments.show')->with('success', 'Payment marked as paid.');
+        }
+
+        return redirect()->route('payments.show')->with('error', 'No receipt available. Payment cannot be marked as paid.');
+    }
+
+
+
+    public function showPayments()
+    {
+        $bookings = Booking::with('payment')->get();
+
+        // You can customize the view name and data according to your needs
+        return view('payments.user_payments', compact('bookings'));
     }
 
     public function store(Venue $venue, BookingOption $bookingOption, BookingRequest $request): RedirectResponse

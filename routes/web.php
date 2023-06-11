@@ -134,6 +134,8 @@ Route::get('/reports', [DashboardController::class, 'landscaper_report'])->name(
 Route::get('payment/{booking}', [PaymentController::class, 'index'])->name('payment.index');
 Route::post('payment/{booking}', [PaymentController::class, 'process'])->name('payment.process');
 Route::get('/payments/receipt/{payment}', [PaymentController::class, 'showReceipt'])->name('payments.receipt');
+Route::get('/payments/user_payments/', [BookingController::class, 'showPayments'])->name('payments.show');
+
 
 
 // wishlist
@@ -142,6 +144,8 @@ Route::middleware('auth')->group(function () {
      Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
      Route::delete('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
 });
+
+Route::get('/bookings/approve_payment/{booking_id}', [BookingController::class, 'approve_payment'])->name('approve.payment');
 
 
 
