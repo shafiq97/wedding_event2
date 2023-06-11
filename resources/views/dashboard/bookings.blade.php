@@ -42,7 +42,7 @@
                         $service = $booking->bookingOption->event;
                         // dd($service);
                     @endphp
-                <div class="list-group" style="margin-bottom: 20px">
+                    <div class="list-group" style="margin-bottom: 20px">
                         <a href="{{ route('bookings.show', $booking) }}" class="list-group-item list-group-item-action">
                             <strong>{{ $service->name }}</strong>
                             <div>
@@ -82,12 +82,15 @@
                             <label for="existing_comment">{{ __('Your comment') }}</label>
                             <textarea disabled class="form-control" id="existing_comment" name="existing_comment" rows="3" readonly>{{ $booking->reviews()->first()->comment }}</textarea>
                         </div>
-                        <div class="form-group">
-                            <label>{{ __('Photo') }}</label>
-                            <p class="text-align: center;">
-                                <img src="{{ Storage::url($booking->reviews()->first()->image_path) }}" width="200" alt="Image">
-                            </p>
-                        </div>
+                        @if ($booking->reviews()->first()->image_path)
+                            <div class="form-group">
+                                <label>{{ __('Photo') }}</label>
+                                <p class="text-align: center;">
+                                    <img src="{{ Storage::url($booking->reviews()->first()->image_path) }}" width="200"
+                                        alt="Image">
+                                </p>
+                            </div>
+                        @endif
                         <hr style="border: 1px red solid">
                     @else
                         @isset($booking->paid_at)
@@ -112,7 +115,7 @@
                                 <div class="form-group" style="margin-top: 10px">
                                     <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                                 </div>
-                                
+
                             </form>
 
                             <hr style="border: 1px red solid">

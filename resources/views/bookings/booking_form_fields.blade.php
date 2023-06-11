@@ -125,6 +125,15 @@
     @include('_shared.address_fields_form', [
         'address' => $booking,
     ])
+    <x-form.row>
+        <div class="form-check">
+            <input name="terms" type="checkbox" class="form-check-input" id="terms" required>
+            <label class="form-check-label" for="terms">
+                I agree to the <a href="https://harlequin-reine-58.tiiny.site/" target="_blank">Terms and Conditions</a>*
+            </label>
+        </div>
+    </x-form.row>
+
 
 @endisset
 <script>
