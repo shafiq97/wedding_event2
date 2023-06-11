@@ -66,10 +66,12 @@ class EventController extends Controller
 
     public function show(Venue $service): View
     {
+
+        // dd($service);
         $this->authorize('view', $service);
-    
+
         $reviews = Review::where('service_id', $service->id)->get();
-    
+
         return view('events.event_show', [
             'service' => $service->loadMissing([
                 'bookingOptions' => static fn(HasMany $query) => $query->withCount([
@@ -80,7 +82,8 @@ class EventController extends Controller
             'reviews' => $reviews,
         ]);
     }
-    
+
+
 
     public function create(): View
     {

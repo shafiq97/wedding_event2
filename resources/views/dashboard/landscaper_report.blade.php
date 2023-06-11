@@ -47,7 +47,7 @@
                                     <h3>Total Decline: {{ $total_decline->total_decline }}</h3>
                                 </div>
                                 <div class="row">
-                                    <h3>Rating:</h3>
+                                    <h3>Average Rating:</h3>
                                     <div class="rating">
                                         @for ($i = 1; $i <= 5; $i++)
                                             @if ($i <= $avg_rating)
@@ -61,59 +61,7 @@
                             </div>
                         </div>
 
-                        @push('scripts')
-                            <script>
-                                const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
-                                const labels = {!! json_encode(array_keys($booking_counts)) !!};
-                                const data = {!! json_encode(array_values($booking_counts)) !!};
-                                new Chart(bookingStatusChart, {
-                                    type: 'pie',
-                                    data: {
-                                        labels: labels,
-                                        datasets: [{
-                                            data: data,
-                                            backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
-                                        }]
-                                    },
-                                    options: {
-                                        legend: {
-                                            position: 'right'
-                                        }
-                                    }
-                                });
-                            </script>
-                        @endpush
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Messages</h5>
-                        <div class="container">
-                            <h1>My Chats</h1>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>User</th>
-                                        <th>Date</th>
-                                        <th>Chat</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($chats as $chat)
-                                        <tr>
-                                            <td> <a
-                                                    href="{{ route('landscaper_profile.index', ['user_id' => $chat->landscaper_id, 'user_name' => $chat->first_name]) }}">{{ $chat->first_name }}</a></span>
-                                            </td>
-                                            <td>{{ $chat->created_at->format('d/m/Y H:i') }}</td>
-                                            <td><a href="{{ route('chat.landscaper', ['user_id' => $chat->user_id, 'landscaper_id' => $chat->landscaper_id, 'user_name' => $chat->first_name]) }}"
-                                                    class="btn btn-warning">Chat</a></td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -148,14 +96,73 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card 4</h5>
-                        <p class="card-text">This is the fourth card.</p>
-                    </div>
-                </div>
-            </div> --}}
+        </div>
+        <div class="row">
+            <canvas id="sales-line-chart"></canvas>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
+        const labels = {!! json_encode(array_keys($booking_counts)) !!};
+        const data = {!! json_encode(array_values($booking_counts)) !!};
+        new Chart(bookingStatusChart, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                }]
+            },
+            options: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        });
+    </script>
+@endpush
+@push('scripts')
+    <script>
+        const salesLineChart = document.getElementById('sales-line-chart').getContext('2d');
+        const salesData = {!! json_encode($salesData) !!};
+        new Chart(salesLineChart, {
+            type: 'line',
+            data: {
+                labels: Object.keys(salesData),
+                datasets: [{
+                    data: Object.values(salesData),
+                    borderColor: 'rgba(75, 192, 192, 0.6)',
+                    fill: false
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Month'
+                        },
+                        ticks: {
+                            maxTicksLimit: 12, // Set the maximum number of ticks to 12
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Sales'
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+@endpush

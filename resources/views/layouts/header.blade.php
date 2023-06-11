@@ -122,7 +122,14 @@
                                                 {{ __('User roles') }}
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('dashboard.landscaper_report') }}">
+                                                <i class="fa fa-fw fa-file-alt"></i>
+                                                {{ __('Reports') }}
+                                            </a>
+                                        </li>
                                     @endif
+
                                 </ul>
                             </li>
                         @endif

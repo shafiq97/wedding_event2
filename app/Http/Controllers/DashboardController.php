@@ -79,6 +79,7 @@ class DashboardController extends Controller
         return view('dashboard.dashboard', [
             'bookings' => $bookings ?? null,
             'events' => $events,
+
         ]);
     }
 
@@ -194,17 +195,17 @@ class DashboardController extends Controller
         $loggedInUserId = auth()->user()->id;
 
         $total_sales = Booking::filter()
-            ->join('services', 'bookings.service_id', '=', 'venues.id')
-            ->where('venues.user_id', $loggedInUserId)
+            ->join('venues', 'bookings.venue_id', '=', 'venues.id')
             ->with([
                 'bookedByUser',
             ])
             ->selectRaw('SUM(price) as total_sales')
             ->first();
 
+        // dd($total_sales);
+
         $total_accepted = Booking::filter()
-            ->join('services', 'bookings.service_id', '=', 'venues.id')
-            ->where('venues.user_id', $loggedInUserId)
+            ->join('venues', 'bookings.venue_id', '=', 'venues.id')
             ->whereNotNull('paid_at')
             ->with([
                 'bookedByUser',
@@ -213,8 +214,7 @@ class DashboardController extends Controller
             ->first();
 
         $total_decline = Booking::filter()
-            ->join('services', 'bookings.service_id', '=', 'venues.id')
-            ->where('venues.user_id', $loggedInUserId)
+            ->join('venues', 'bookings.venue_id', '=', 'venues.id')
             ->whereNull('paid_at')
             ->with([
                 'bookedByUser',
@@ -231,7 +231,6 @@ class DashboardController extends Controller
             ->where('venues.visibility', '=', Visibility::Public ->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', DB::raw('reviewer.first_name as reviewer_first_name'))
             ->whereNotNull('reviewer.first_name')
-            ->where('venues.id', '=', auth()->user()->id)
             ->groupBy('venues.id')
             ->get();
 
@@ -257,12 +256,26 @@ class DashboardController extends Controller
             ->get();
 
         $bookings = Booking::filter()
-            ->join('services', 'bookings.service_id', '=', 'venues.id')
-            ->where('venues.user_id', $loggedInUserId)
+            ->join('venues', 'bookings.venue_id', '=', 'venues.id')
+            // ->where('venues.user_id', $loggedInUserId)
             ->with([
                 'bookedByUser',
             ])
             ->get();
+
+        $salesData = Booking::where('created_at', '>=', now()->subYear())
+            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('YEAR(created_at) as year'), DB::raw('SUM(price) as total_sales'))
+            ->groupBy('month', 'year')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get()
+            ->keyBy(function ($item) {
+                // This will use 'YYYY-MM' as the key, e.g., '2023-06'
+                return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+            })
+            ->map(function ($item) {
+                return $item->total_sales;
+            });
 
 
 
@@ -274,7 +287,9 @@ class DashboardController extends Controller
             'avg_rating' => $avg_rating,
             'chats' => $chats,
             'services' => $venues,
-            'bookings' => $bookings
+            'bookings' => $bookings,
+            'salesData' => $salesData
         ]);
+
     }
 }

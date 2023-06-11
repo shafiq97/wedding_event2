@@ -129,6 +129,7 @@ class Booking extends Model
 
             return true;
         } catch (QueryException $e) {
+            dd($e);
             if ($e->errorInfo[1] == 1062) { // 1062 is the error code for duplicate entry
                 // handle the duplicate entry error here
                 return false;

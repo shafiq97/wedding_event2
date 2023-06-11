@@ -80,9 +80,20 @@
         @foreach ($reviews as $review)
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Rating: {{ $review->rating }} By User #{{ $review->user_id }}</h5>
-                    <p class="card-text">Comment: {{ $review->comment }}</p>
-                    <img src="{{ Storage::url($review->image_path) }}" alt="Review Image">
+                    <h5 class="card-title">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $review->rating)
+                                &#9733;
+                                <!-- filled star for each point of the rating -->
+                            @else
+                                &#9734;
+                                <!-- empty star for remaining points -->
+                            @endif
+                        @endfor
+                    </h5>
+                    <small>by {{ $review->user->first_name }}</small>
+                    <p class="card-text">{{ $review->comment }}</p>
+                    <img height="200px" src="{{ Storage::url($review->image_path) }}" alt="Review Image">
                 </div>
             </div>
         @endforeach

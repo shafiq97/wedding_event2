@@ -29,6 +29,8 @@ use App\Models\UserRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportController;
+use PHP_CodeSniffer\Reports\Report;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +88,7 @@ Route::middleware('auth')->group(static function () {
           ->name('account.edit');
      Route::put('account', [AccountController::class, 'update'])
           ->name('account.update');
+
 });
 
 Route::get('/', [DashboardController::class, 'index'])

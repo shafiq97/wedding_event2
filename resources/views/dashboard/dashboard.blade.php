@@ -63,7 +63,6 @@
                         count(Auth::user()->userRoles) > 0 &&
                         Auth::user()->userRoles[0]->name == 'User' &&
                         $bookings !== null)
-                    {{-- Remaining code here --}}
                 @endif
             </div>
         </div>

@@ -27,7 +27,7 @@
         </span>
         <div>@include('events.shared.event_dates')</div>
     </li> --}}
-    <li class="list-group-item d-flex">
+    {{-- <li class="list-group-item d-flex">
         <span class="me-3">
             <i class="fa fa-fw fa-location-pin" title="{{ __('Address') }}"></i>
         </span>
@@ -38,7 +38,7 @@
                 @endif
             @endforeach
         </div>
-    </li>
+    </li> --}}
     <li class="list-group-item d-flex">
         <span class="me-3">
             <i class="fa fa-fw fa-clock" title="{{ __('Date') }}"></i>
