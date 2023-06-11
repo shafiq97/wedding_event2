@@ -21,7 +21,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Overview</h5>
@@ -66,6 +66,9 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <canvas id="sales-line-chart"></canvas>
+        </div>
         <div class="row mt-3">
             <div class="col-md-12">
                 <div class="card">
@@ -97,9 +100,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <canvas id="sales-line-chart"></canvas>
-        </div>
+
     </div>
 @endsection
 
@@ -142,6 +143,10 @@
             options: {
                 legend: {
                     display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Sales'
                 },
                 scales: {
                     xAxes: [{

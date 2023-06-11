@@ -128,13 +128,12 @@ class DashboardController extends Controller
             $bookings = $user->bookings()
                 ->with([
                     'bookingOption.event',
+                    'payment' // Load the payment relationship
                 ])
                 ->orderByDesc('booked_at')
                 ->limit(10)
                 ->get();
         }
-
-        // dd($bookings);
 
 
         return view('dashboard.bookings', [

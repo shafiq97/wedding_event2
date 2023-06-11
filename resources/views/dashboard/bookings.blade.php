@@ -69,9 +69,18 @@
                                 @isset($booking->booked_at)
                                     <span class="badge bg-primary">{{ formatDateTime($booking->booked_at) }}</span>
                                 @endisset
+
                             </div>
                         </a>
+                        <div>
+                            @isset($booking->paid_at)
+                                @isset($booking->payment)
+                                    <a href="{{ route('payments.receipt', ['payment' => $booking->payment->payment_id]) }}">View Receipt</a>
+                                @endisset
+                            @endisset
+                        </div>
                     </div>
+
                     @if ($booking->reviews()->count() > 0)
                         <div class="form-group">
                             <label for="existing_rating">{{ __('Your rating') }}</label>

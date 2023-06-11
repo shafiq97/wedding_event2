@@ -133,6 +133,8 @@ Route::get('/reports', [DashboardController::class, 'landscaper_report'])->name(
 // Payment
 Route::get('payment/{booking}', [PaymentController::class, 'index'])->name('payment.index');
 Route::post('payment/{booking}', [PaymentController::class, 'process'])->name('payment.process');
+Route::get('/payments/receipt/{payment}', [PaymentController::class, 'showReceipt'])->name('payments.receipt');
+
 
 // wishlist
 Route::middleware('auth')->group(function () {
