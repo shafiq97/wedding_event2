@@ -18,8 +18,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Booking Option ID</th>
+                    <th>Booking ID</th>
+                    <th>Venue</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
@@ -32,7 +32,7 @@
                 @foreach ($bookings as $booking)
                     <tr>
                         <td>{{ $booking->id }}</td>
-                        <td>{{ $booking->booking_option_id }}</td>
+                        <td>{{ $booking->venue_name }}</td>
                         <td>{{ $booking->first_name }}</td>
                         <td>{{ $booking->last_name }}</td>
                         <td>{{ $booking->email }}</td>

@@ -75,7 +75,8 @@
                         <div>
                             @isset($booking->paid_at)
                                 @isset($booking->payment)
-                                    <a href="{{ route('payments.receipt', ['payment' => $booking->payment->payment_id]) }}">View Receipt</a>
+                                    <a href="{{ route('payments.receipt', ['payment' => $booking->payment->payment_id]) }}">View
+                                        Receipt</a>
                                 @endisset
                             @endisset
                         </div>

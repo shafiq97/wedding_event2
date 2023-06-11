@@ -93,11 +93,15 @@ class BookingController extends Controller
 
     public function showPayments()
     {
-        $bookings = Booking::with('payment')->get();
+        $bookings = Booking::with('payment')
+            ->join('venues', 'bookings.venue_id', '=', 'venues.id')
+            ->select('bookings.*', 'venues.name as venue_name')
+            ->get();
 
         // You can customize the view name and data according to your needs
         return view('payments.user_payments', compact('bookings'));
     }
+
 
     public function store(Venue $venue, BookingOption $bookingOption, BookingRequest $request): RedirectResponse
     {

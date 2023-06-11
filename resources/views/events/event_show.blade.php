@@ -93,7 +93,9 @@
                     </h5>
                     <small>by {{ $review->user->first_name }}</small>
                     <p class="card-text">{{ $review->comment }}</p>
-                    <img height="200px" src="{{ Storage::url($review->image_path) }}" alt="Review Image">
+                    @if ($review->image_path)
+                        <img height="200px" src="{{ Storage::url($review->image_path) }}" alt="Review Image">
+                    @endif
                 </div>
             </div>
         @endforeach

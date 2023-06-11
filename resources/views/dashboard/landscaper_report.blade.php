@@ -41,10 +41,10 @@
                                     <h3>Total sales: RM{{ $total_sales->total_sales }}</h3>
                                 </div>
                                 <div class="row">
-                                    <h3>Total Accepted: {{ $total_accepted->total_accepted }}</h3>
+                                    <h3>Total Approve: {{ $total_accepted->total_accepted }}</h3>
                                 </div>
                                 <div class="row">
-                                    <h3>Total Decline: {{ $total_decline->total_decline }}</h3>
+                                    <h3>Total Pending: {{ $total_decline->total_decline }}</h3>
                                 </div>
                                 <div class="row">
                                     <h3>Average Rating:</h3>
