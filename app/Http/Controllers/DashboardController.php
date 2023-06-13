@@ -7,6 +7,7 @@ use App\Http\Requests\Filters\BookingFilterRequest;
 use App\Models\Booking;
 use App\Models\BookingOption;
 use App\Models\Chat;
+use App\Models\Review;
 use App\Models\Venue;
 use App\Models\User;
 use App\Options\Visibility;
@@ -62,7 +63,9 @@ class DashboardController extends Controller
             $query->havingRaw('COALESCE(AVG(reviews.rating), 0) = ?', [$rating]);
         });
 
-        $events = $venues->get();
+        $events = $venues->paginate(6);
+
+        $reviews = Review::all();
 
         /** @var ?User $user */
         $user = Auth::user();
@@ -78,7 +81,8 @@ class DashboardController extends Controller
 
         return view('dashboard.dashboard', [
             'bookings' => $bookings ?? null,
-            'events' => $events,
+            'events' => $events ?? null,
+            'reviews' => $reviews ?? null,
 
         ]);
     }

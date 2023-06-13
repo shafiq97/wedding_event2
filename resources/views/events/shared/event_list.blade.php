@@ -1,5 +1,5 @@
 @php
-    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Venue[] $events */
+    /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator|\App\Models\Venue[] $events */
     /* @var ?string $noEventsMessage */
     $showVisibility = $showVisibility ?? true;
 @endphp
@@ -39,79 +39,86 @@
         </p>
     @endisset
 @else
-    <div class="list-group">
+    <div class="row">
         @foreach ($events as $service)
             @can('view', $service)
-                <a href="{{ route('events.show', $service->slug) }}">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <div class="left">
-                                <h2 class="card-title">{{ $service->name }}</h2>
-                                <p class="card-text">by <a
-                                        href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
-                                </p>
-                            </div>
-                            <div>
-                                @for ($i = 0; $i < $service->service_rating; $i++)
-                                    <span class="rating-star">&#9733;</span>
-                                @endfor
-                                @for ($i = $service->service_rating; $i < 5; $i++)
-                                    <span class="empty-star">&#9734;</span>
-                                @endfor
-                            </div>
-                            @auth
-                                <button style="background: none; border: none;"
-                                    class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
-                                    data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
-                            @endauth
-                        </div>
-                        <div class="card-body">
-                            @if ($service->images->count() > 0)
-                                <!-- Carousel for images -->
-                                <div id="carousel{{ $service->id }}" class="carousel slide mt-2" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        @foreach ($service->images as $image)
-                                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                                <img src="{{ asset('storage/' . $image->path) }}" class="d-block w-100"
-                                                    alt="Image">
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <button class="carousel-control-prev" type="button"
-                                        data-bs-target="#carousel{{ $service->id }}" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button"
-                                        data-bs-target="#carousel{{ $service->id }}" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ route('events.show', $service->slug) }}">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="left">
+                                    <h4 class="card-title">{{ $service->name }}</h4>
+                                    <p class="card-text">by <a
+                                            href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
+                                    </p>
                                 </div>
-                            @endif
-                            <!-- Location -->
-                            <p class="location-text">
-                                <i class="fa fa-fw fa-location-pin location-icon"></i>
-                                {{ $service->location->nameOrAddress }}
-                            </p>
-                            @if ($showVisibility)
                                 <div>
-                                    <i class="fa fa-fw fa-eye" title="{{ __('Visibility') }}"></i>
-                                    <x-badge.visibility :visibility="$service->visibility" />
+                                    @for ($i = 0; $i < $service->service_rating; $i++)
+                                        <span class="rating-star">&#9733;</span>
+                                    @endfor
+                                    @for ($i = $service->service_rating; $i < 5; $i++)
+                                        <span class="empty-star">&#9734;</span>
+                                    @endfor
                                 </div>
-                            @endif
-                            <div class="text-muted">
-                                {{ $service->description }}
+                                @auth
+                                    <button style="background: none; border: none;"
+                                        class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
+                                        data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
+                                @endauth
                             </div>
-                            <div class="text-muted">
-                                Price from RM{{ $service->min_price }}
+                            <div class="card-body">
+                                @if ($service->images->count() > 0)
+                                    <!-- Carousel for images -->
+                                    <div id="carousel{{ $service->id }}" class="carousel slide mt-2"
+                                        data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach ($service->images as $image)
+                                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                                    <img src="{{ asset('storage/' . $image->path) }}"
+                                                        class="card-img-top" alt="Image"
+                                                        style="height: 200px; object-fit: cover;">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carousel{{ $service->id }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carousel{{ $service->id }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                @endif
+                                <!-- Location -->
+                                <p class="location-text">
+                                    <i class="fa fa-fw fa-location-pin location-icon"></i>
+                                    {{ $service->location->nameOrAddress }}
+                                </p>
+                                @if ($showVisibility)
+                                    <div>
+                                        <i class="fa fa-fw fa-eye" title="{{ __('Visibility') }}"></i>
+                                        <x-badge.visibility :visibility="$service->visibility" />
+                                    </div>
+                                @endif
+                                <div class="text-muted">
+                                    {{ $service->description }}
+                                </div>
+                                <div class="text-muted">
+                                    Price from RM{{ $service->min_price }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             @endcan
         @endforeach
     </div>
+
+    <!-- Pagination links -->
+    {{ $events->links() }}
 @endif
 
 <script>

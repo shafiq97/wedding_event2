@@ -10,6 +10,24 @@
     {{ __('Dashboard') }}
 @endsection
 
+<style>
+    /* Add custom styles for the review section */
+    .review-container {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px;
+    }
+
+    .review-item {
+        flex: 0 0 auto;
+        width: 200px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
 @section('content')
     <div class="row">
         <div class="col-md-4">
@@ -67,4 +85,27 @@
             </div>
         </div>
     </div>
+    <!-- Add the review section here -->
+    <div class="col-12 col-md-12">
+        <h2>{{ __('Reviews') }}</h2>
+        <div class="review-container">
+            @foreach ($reviews as $review)
+                <div class="review-item">
+                    <div class="review-comment">{{ $review->user->first_name }}</div>
+                    <div class="review-rating">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $review->rating)
+                                <span class="rating-star">&#9733;</span>
+                            @else
+                                <span class="empty-star">&#9734;</span>
+                            @endif
+                        @endfor
+                    </div>
+                    <div class="review-comment">{{ $review->service->name }}</div>
+                    <div class="review-comment">{{ $review->comment }}</div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    
 @endsection

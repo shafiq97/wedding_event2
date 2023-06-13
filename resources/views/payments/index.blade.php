@@ -13,6 +13,7 @@
             </div>
         @endif
         <h1>Make With Payment</h1>
+        <h6>You can make a purchase or continue booking step by enter no account or qr code below </h6>
 
         <div>
             <img src="{{ asset('storage/qrpayment.jpeg') }}">

@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,24 +44,32 @@ class EventController extends Controller
             $venues = $venues->where('user_id', $user->id);
         }
 
-        $venues = $venues->paginate();
+        $venues = $venues->paginate(6);
 
         return view('events.event_index', $this->formValuesForFilter([
             'services' => $venues,
         ]));
     }
 
-
     public function destroy(Venue $service): RedirectResponse
     {
         $this->authorize('delete', $service);
-
-        if ($service->delete()) {
-            Session::flash('success', __('Deleted successfully.'));
+    
+        try {
+            if ($service->delete()) {
+                Session::flash('success', __('Deleted successfully.'));
+            }
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                Session::flash('error', __('Cannot delete the venue because it has related bookings.'));
+            } else {
+                Session::flash('error', __('An error occurred during deletion.'));
+            }
         }
-
+    
         return redirect()->route('events.index');
     }
+    
 
 
 
