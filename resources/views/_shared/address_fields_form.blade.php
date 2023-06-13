@@ -7,7 +7,7 @@
 @endphp
 
 <x-form.row>
-    <x-form.label for="state">{{ __('State') }}</x-form.label>
+    <x-form.label for="state">{{ __('Select state') }}</x-form.label>
     <select name="state" id="state" class="form-control">
         @foreach ($states as $state)
             <option value="{{ $state }}" {{ $address?->state == $state ? 'selected' : '' }}>

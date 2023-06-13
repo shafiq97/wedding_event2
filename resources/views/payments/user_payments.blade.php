@@ -50,7 +50,6 @@
                                     href="{{ route('approve.payment', ['booking_id' => $booking->id]) }}">Mark as paid</a>
                             </td>
                         @endif
-
                     </tr>
                 @endforeach
             </tbody>

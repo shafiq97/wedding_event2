@@ -20,6 +20,7 @@ use Spatie\QueryBuilder\AllowedFilter;
  * @property string $first_name
  * @property string $last_name
  * @property string $email
+ * @property string $state
  * @property ?string $phone
  * @property ?Carbon $booked_at
  * @property ?Carbon $booked_date_until
@@ -54,6 +55,7 @@ class Booking extends Model
         'postal_code',
         'city',
         'country',
+        'state',
         'booked_at',
         'paid_at',
         'comment',
@@ -129,10 +131,11 @@ class Booking extends Model
 
             return true;
         } catch (QueryException $e) {
-            dd($e);
             if ($e->errorInfo[1] == 1062) { // 1062 is the error code for duplicate entry
                 // handle the duplicate entry error here
                 return false;
+            } else {
+                dd($e);
             }
             throw $e;
         }
@@ -194,6 +197,6 @@ class Booking extends Model
     {
         return $this->hasOne(Payment::class);
     }
-    
+
 
 }

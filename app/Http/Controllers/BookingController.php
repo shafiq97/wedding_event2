@@ -65,7 +65,7 @@ class BookingController extends Controller
     public function show(Booking $booking): View
     {
         $this->authorize('view', $booking);
-
+        // die($booking);
         return view('bookings.booking_show', [
             'booking' => $booking->loadMissing([
                 'bookingOption.form.formFieldGroups.formFields',
@@ -116,6 +116,7 @@ class BookingController extends Controller
         $booking->venue_id          = $venue->id;
         $booking->booked_date_until = $request->input('booked_date_until');
         $booking->booked_date_from  = $request->input('booked_date_from');
+        $booking->state = $request->input('state');
 
         // Calculate the number of days
         $bookedDateFrom  = Carbon::parse($booking->booked_date_from);
