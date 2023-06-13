@@ -15,8 +15,12 @@ class PaymentController extends Controller
         // Load the booking information
         $booking = Booking::findOrFail($booking);
 
-        return view('payments.index', compact('booking'));
+        // Retrieve the payments associated with the booking
+        $payments = $booking->payment;
+
+        return view('payments.index', compact('booking', 'payments'));
     }
+
 
     public function showReceipt($paymentId)
     {

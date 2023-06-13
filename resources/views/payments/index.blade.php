@@ -31,12 +31,23 @@
             {{-- <label for="">Payment method</label> <br> --}}
             <input type="hidden" name="payment_method" value="Qr">
 
-            <!-- Add this to your form fields -->
-            <label for="receipt">Upload Receipt (PDF or Image)</label><br>
-            <input type="file" name="receipt" accept=".pdf, .jpg, .jpeg, .png">
-            <br><br>
 
-            <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
+            @if ($payments)
+                @if (!$booking->paid_at)
+                    <h1>Your payment is processing, wait for admin approval</h1>
+                @endif
+            @else
+                <!-- Add this to your form fields -->
+                <label for="receipt">Upload Receipt (PDF or Image)</label><br>
+                <input type="file" name="receipt" accept=".pdf, .jpg, .jpeg, .png">
+                <br><br>
+                <button type="submit" class="btn btn-primary">{{ __('Pay Now') }}</button>
+            @endif
+
+
+
+
+
         </form>
     </div>
 @endsection
