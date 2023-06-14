@@ -1,5 +1,5 @@
 @php
-    /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator|\App\Models\Venue[] $events */
+    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Venue[] $events */
     /* @var ?string $noEventsMessage */
     $showVisibility = $showVisibility ?? true;
 @endphp
@@ -29,6 +29,17 @@
 
     .card-header .left {
         flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-header .left .service-info {
+        max-width: 60%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 
@@ -44,21 +55,23 @@
             @can('view', $service)
                 <div class="col-md-6 mb-3">
                     <a href="{{ route('events.show', $service->slug) }}">
-                        <div class="card mb-3">
+                        <div class="card mb-3 d-flex flex-column">
                             <div class="card-header">
                                 <div class="left">
-                                    <h4 class="card-title">{{ $service->name }}</h4>
-                                    <p class="card-text">by <a
-                                            href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
-                                    </p>
-                                </div>
-                                <div>
-                                    @for ($i = 0; $i < $service->service_rating; $i++)
-                                        <span class="rating-star">&#9733;</span>
-                                    @endfor
-                                    @for ($i = $service->service_rating; $i < 5; $i++)
-                                        <span class="empty-star">&#9734;</span>
-                                    @endfor
+                                    <div class="service-info">
+                                        <h2 class="card-title">{{ $service->name }}</h2>
+                                        <p class="card-text">by <a
+                                                href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        @for ($i = 0; $i < $service->service_rating; $i++)
+                                            <span class="rating-star">&#9733;</span>
+                                        @endfor
+                                        @for ($i = $service->service_rating; $i < 5; $i++)
+                                            <span class="empty-star">&#9734;</span>
+                                        @endfor
+                                    </div>
                                 </div>
                                 @auth
                                     <button style="background: none; border: none;"
@@ -74,9 +87,8 @@
                                         <div class="carousel-inner">
                                             @foreach ($service->images as $image)
                                                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                                    <img src="{{ asset('storage/' . $image->path) }}"
-                                                        class="card-img-top" alt="Image"
-                                                        style="height: 200px; object-fit: cover;">
+                                                    <img src="{{ asset('storage/' . $image->path) }}" class="card-img-top"
+                                                        alt="Image" style="height: 200px; object-fit: cover;">
                                                 </div>
                                             @endforeach
                                         </div>
@@ -92,20 +104,11 @@
                                         </button>
                                     </div>
                                 @endif
-                                <!-- Location -->
-                                <p class="location-text">
-                                    <i class="fa fa-fw fa-location-pin location-icon"></i>
-                                    {{ $service->location->nameOrAddress }}
-                                </p>
-                                @if ($showVisibility)
-                                    <div>
-                                        <i class="fa fa-fw fa-eye" title="{{ __('Visibility') }}"></i>
-                                        <x-badge.visibility :visibility="$service->visibility" />
-                                    </div>
-                                @endif
-                                <div class="text-muted">
-                                    {{ $service->description }}
-                                </div>
+                                <!-- Description with See More functionality -->
+                                <div class="text-muted" id="description-{{ $service->id }}"></div>
+                                <a href="#" id="toggle-{{ $service->id }}"
+                                    onclick="toggleDescription('{{ $service->id }}')">Read more</a>
+                                <!-- End of Description -->
                                 <div class="text-muted">
                                     Price from RM{{ $service->min_price }}
                                 </div>
@@ -116,12 +119,48 @@
             @endcan
         @endforeach
     </div>
-
-    <!-- Pagination links -->
-    {{ $events->links() }}
 @endif
 
+<!-- Rest of your JavaScript code... -->
+
+
 <script>
+    // Store all descriptions in an object for easy access
+    var descriptions = {
+        @foreach ($events as $service)
+            "{{ $service->id }}": {!! json_encode($service->description) !!},
+        @endforeach
+    };
+
+    // This function will be called when the "Read more" or "Show less" link is clicked
+    function toggleDescription(serviceId) {
+        // Get the elements for the description and the link
+        var descriptionElement = document.getElementById('description-' + serviceId);
+        var toggleElement = document.getElementById('toggle-' + serviceId);
+
+        // If the short description is currently displayed, switch to the full version
+        if (toggleElement.innerHTML === "Read more") {
+            descriptionElement.innerHTML = descriptions[serviceId];
+            toggleElement.innerHTML = "Show less";
+        }
+        // If the full description is currently displayed, switch to the short version
+        else {
+            descriptionElement.innerHTML = descriptions[serviceId].substring(0, 100) + "...";
+            toggleElement.innerHTML = "Read more";
+        }
+    }
+
+    // Insert the initial short descriptions when the page loads
+    window.onload = function() {
+        for (var serviceId in descriptions) {
+            var descriptionElement = document.getElementById('description-' + serviceId);
+            var toggleElement = document.getElementById('toggle-' + serviceId);
+            descriptionElement.innerHTML = descriptions[serviceId].substring(0, 100) + "...";
+            toggleElement.innerHTML = "Read more";
+        }
+    };
+
+    // Wishlist functionality
     window.addEventListener('DOMContentLoaded', (event) => {
         const wishlistButtons = document.querySelectorAll('.wishlist-button');
 

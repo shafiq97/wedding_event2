@@ -7,7 +7,7 @@
 @endphp
 
 @section('title')
-    {{ __('Dashboard') }}
+    {{ __('Homepage') }}
 @endsection
 
 <style>

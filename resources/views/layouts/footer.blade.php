@@ -80,7 +80,7 @@
                                 @if ($canViewEvents)
                                     <a class="" href="{{ route('dashboard.landscaper_report') }}">
                                         <i class="fa fa-home"></i>
-                                        {{ __('Dashboard') }}
+                                        {{ __('Homepage') }}
                                     </a>
                                     <a class="" href="{{ route('dashboard') }}">
                                         <i class="fa fa-star"></i>

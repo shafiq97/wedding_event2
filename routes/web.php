@@ -142,7 +142,7 @@ Route::get('/payments/user_payments/', [BookingController::class, 'showPayments'
 Route::middleware('auth')->group(function () {
      Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
      Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
-     Route::delete('/wishlist/remove', [WishlistController::class, 'remove'])->name('wishlist.remove');
+     Route::delete('/wishlist/remove/{wishlist}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 });
 
 Route::get('/bookings/approve_payment/{booking_id}', [BookingController::class, 'approve_payment'])->name('approve.payment');

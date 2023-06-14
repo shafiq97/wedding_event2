@@ -29,7 +29,7 @@
         @hasSection('breadcrumbs')
             <nav class="mx-5 mt-3" aria-label="breadcrumb">
                 <ol class="breadcrumb bg-light rounded-pill p-2">
-                    <x-nav.breadcrumb href="{{ route('dashboard') }}">{{ __('Dashboard') }}</x-nav.breadcrumb>
+                    <x-nav.breadcrumb href="{{ route('dashboard') }}">{{ __('Homepage') }}</x-nav.breadcrumb>
                     @yield('breadcrumbs')
                 </ol>
             </nav>

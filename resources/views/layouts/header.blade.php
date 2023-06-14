@@ -18,7 +18,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">
                             <i class="fa fa-home"></i>
-                            {{ __('Dashboard') }}
+                            {{ __('Homepage') }}
                         </a>
                     </li>
                 </ul>
@@ -188,12 +188,12 @@
                                 </form>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="btn btn-light border-1" href="{{ route('chat.center') }}">
                                 <i class="fa fa-fw fa-comment"></i>
                                 {{ __('Messages') }}
                             </a>
-                        </li>
+                        </li> --}}
                     @endguest
                 </ul>
             </div>

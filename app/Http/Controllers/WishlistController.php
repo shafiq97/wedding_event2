@@ -19,11 +19,12 @@ class WishlistController extends Controller
         Auth::user()->wishlist()->attach($serviceId);
         return back();
     }
-
-    public function remove(Request $request)
+    public function remove($wishlist)
     {
-        $serviceId = $request->get('service_id');
-        Auth::user()->wishlist()->detach($serviceId);
+        Auth::user()->wishlist()->detach($wishlist);
         return back();
     }
+    
+
+
 }

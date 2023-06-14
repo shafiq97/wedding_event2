@@ -23,6 +23,7 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Remove from Wishlist</button>
                                 </form>
+
                             </div>
                         </div>
                     </div>
