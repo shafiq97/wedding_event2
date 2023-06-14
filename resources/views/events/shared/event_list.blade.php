@@ -5,6 +5,10 @@
 @endphp
 
 <style>
+    a {
+        text-decoration: none;
+    }
+
     .wishlist-button .fa-heart {
         color: black;
     }
@@ -55,12 +59,13 @@
             @can('view', $service)
                 <div class="col-md-6 mb-3">
                     <a href="{{ route('events.show', $service->slug) }}">
-                        <div class="card mb-3 d-flex flex-column">
+                        <div class="card shadoq mb-3 d-flex flex-column">
                             <div class="card-header">
                                 <div class="left">
                                     <div class="service-info">
-                                        <h2 class="card-title">{{ $service->name }}</h2>
-                                        <p class="card-text">by <a
+                                        <h2 style="color: rgb(4, 4, 97)" class="card-title">{{ $service->name }}</h2>
+                                        <p style="color: rgb(4, 4, 97)" class="card-text">by
+                                            <a
                                                 href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
                                         </p>
                                     </div>
@@ -118,6 +123,7 @@
                 </div>
             @endcan
         @endforeach
+
     </div>
 @endif
 
@@ -160,6 +166,7 @@
         }
     };
 
+
     // Wishlist functionality
     window.addEventListener('DOMContentLoaded', (event) => {
         const wishlistButtons = document.querySelectorAll('.wishlist-button');
@@ -171,8 +178,6 @@
                 const isAdded = this.classList.contains('added');
 
                 const form = document.createElement('form');
-                form.action = isAdded ? '{{ route('wishlist.remove') }}' :
-                    '{{ route('wishlist.add') }}';
                 form.method = 'POST';
                 form.style.display = 'none';
 
@@ -198,6 +203,15 @@
                 form.appendChild(methodInput);
 
                 document.body.appendChild(form);
+
+                if (isAdded) {
+                    form.action =
+                        '{{ route('wishlist.remove', ['wishlist' => ':wishlistId']) }}'
+                        .replace(':wishlistId', serviceId);
+                } else {
+                    form.action = '{{ route('wishlist.add') }}';
+                }
+
                 form.submit();
             });
         });

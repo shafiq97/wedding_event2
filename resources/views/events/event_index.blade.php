@@ -39,7 +39,7 @@
                     </x-form.select>
                 </x-form.row>
             </div>
-            <div class="col-12 col-md-6 col-xl">
+            {{-- <div class="col-12 col-md-6 col-xl">
                 <x-form.row>
                     <x-form.label for="organization_id">{{ __('Organization') }}</x-form.label>
                     <x-form.select id="organization_id" name="filter[organization_id]"
@@ -47,7 +47,7 @@
                         <option value="">{{ __('all') }}</option>
                     </x-form.select>
                 </x-form.row>
-            </div>
+            </div> --}}
         </div>
     </x-form.filter>
 

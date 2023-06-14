@@ -17,12 +17,10 @@
         href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg"
         color="#111" />
 
+    <title>Welcome</title>
 
-
-
-    <title>welcome</title>
-
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat:400,700'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.2/jquery.fullPage.css'>
@@ -98,7 +96,7 @@
             top: 0;
             left: 0;
             animation: 1s linear;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
@@ -214,12 +212,217 @@
 </head>
 
 <body translate="no">
+    
+
     <div id="homepage">
         <section id="landing" class="background section">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: darkblue">
+                    <div class="container px-2">
+                        <div class="div">
+                            <img height="50px"
+                                src="https://cdn.dribbble.com/users/2419815/screenshots/6674402/attachment_98819509_4x.png"
+                                alt="">
+                        </div>
+                        <a class="navbar-brand" href="{{ route('dashboard') }}">
+                            {{ config('app.name') }}
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                            aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarHeader">
+                            <ul class="navbar-nav me-md-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('dashboard') }}">
+                                        <i class="fa fa-home"></i>
+                                        {{ __('Homepage') }}
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ms-md-auto mt-0">
+                                @guest
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">
+                                            <i class="fa fa-sign-in-alt"></i>
+                                            {{ __('Login') }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('register') }}">
+                                            <i class="fa fa-user-plus"></i>
+                                            {{ __('Register') }}
+                                        </a>
+                                    </li>
+                                @else
+                                    @php
+                                        /** @var \App\Models\User $loggedInUser */
+                                        $loggedInUser = \Illuminate\Support\Facades\Auth::user();
+                                        $role = $loggedInUser->userRoles->pluck('name')->toArray();
+                                        
+                                        $canViewEvents = $loggedInUser->can('viewAny', App\Models\Venue::class);
+                                        $canViewEventSeries = $loggedInUser->can('viewAny', App\Models\ServiceSeries::class);
+                                        $canViewForms = $loggedInUser->can('viewAny', App\Models\Form::class);
+                                        $canViewOrganizations = $loggedInUser->can('viewAny', App\Models\Organization::class);
+                                        $canViewLocations = $loggedInUser->can('viewAny', App\Models\Location::class);
+                                        
+                                        $canViewUsers = $loggedInUser->can('viewAny', App\Models\User::class);
+                                        $canViewUserRoles = $loggedInUser->can('viewAny', App\Models\UserRole::class);
+                                        
+                                        $canAdmin = $canViewEvents || $canViewEventSeries || $canViewForms || $canViewOrganizations || $canViewLocations || $canViewUsers || $canViewUserRoles;
+                                    @endphp
+                                    @if ($canAdmin)
+                                        <li class="nav-item dropdown">
+                                            <a id="navbarAdminDropdown" class="nav-link dropdown-toggle" href="#"
+                                                role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-wrench"></i>
+                                                {{ __('Setting') }}
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarAdminDropdown">
+                                                @if ($canViewEvents)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('events.index') }}">
+                                                            <i class="fa fa-fw fa-calendar-days"></i>
+                                                            {{ __('Venues') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                {{-- @if ($canViewEventSeries)
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('event-series.index') }}">
+                                                            <i class="fa fa-fw fa-calendar-week"></i>
+                                                            {{ __('Venues series') }}
+                                                        </a>
+                                                    </li>
+                                                @endif --}}
+                                                {{-- @if ($canViewForms)
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('forms.index') }}">
+                                                            <i class="fa fa-fw fa-table-list"></i>
+                                                            {{ __('Forms') }}
+                                                        </a>
+                                                    </li>
+                                                @endif --}}
+                                                {{-- @if ($canViewOrganizations)
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('organizations.index') }}">
+                                                            <i class="fa fa-fw fa-sitemap"></i>
+                                                            {{ __('Organizations') }}
+                                                        </a>
+                                                    </li>
+                                                @endif --}}
+                                                @if ($canViewLocations)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('locations.index') }}">
+                                                            <i class="fa fa-fw fa-location-pin"></i>
+                                                            {{ __('Locations') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if ($canViewUsers || $canViewUserRoles)
+                                                    <li class="dropdown-divider"></li>
+                                                @endif
+                                                @if ($canViewUsers)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('users.index') }}">
+                                                            <i class="fa fa-fw fa-users"></i>
+                                                            {{ __('Users') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if ($canViewUserRoles)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('user-roles.index') }}">
+                                                            <i class="fa fa-fw fa-user-group"></i>
+                                                            {{ __('User roles') }}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('dashboard.landscaper_report') }}">
+                                                            <i class="fa fa-fw fa-file-alt"></i>
+                                                            {{ __('Reports') }}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('payments.show') }}">
+                                                            <i class="fa fa-fw fa-credit-card"></i>
+                                                            {{ __('Payments') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+        
+                                            </ul>
+                                        </li>
+                                    @endif
+                                    <li class="nav-item dropdown">
+                                        <a id="navbarUserDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-user-circle"></i>
+                                            Hi, {{ $loggedInUser->name }}
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                                            @if ($loggedInUser->can('editAccount', \App\Models\User::class))
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('account.edit') }}">
+                                                        <i class="fa fa-fw fa-user-cog"></i>
+                                                        {{ __('My account') }}
+                                                    </a>
+                                                </li>
+                                                @if ($role[0] == 'User')
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('dashboard.bookings') }}">
+                                                            <i class="fa fa-fw fa-book"></i>
+                                                            {{ __('Bookings') }}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('wishlist') }}">
+                                                            <i class="fa fa-fw fa-heart"></i>
+                                                            {{ __('Wishlist') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if ($role[0] == 'Vendor')
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('dashboard.landscaper') }}">
+                                                            <i class="fa fa-fw fa-book"></i>
+                                                            {{ __('Customer Bookings') }}
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                            @endif
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    <i class="fa fa-fw fa-sign-out-alt"></i>
+                                                    {{ __('Logout') }}
+                                                </a>
+                                            </li>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                                @csrf
+                                            </form>
+                                        </ul>
+                                    </li>
+                                    {{-- <li class="nav-item">
+                                        <a class="btn btn-light border-1" href="{{ route('chat.center') }}">
+                                            <i class="fa fa-fw fa-comment"></i>
+                                            {{ __('Messages') }}
+                                        </a>
+                                    </li> --}}
+                                @endguest
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
             <div class="content-wrapper bgpaper centered">
                 <div class="logo">
-                    <svg id="web" onclick="obt1.reset().play();" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 32 32">
+                    <svg id="web" onclick="obt1.reset().play();" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200"
+                        height="200" viewBox="0 0 32 32">
                         <path id="p1" fill="#555"
                             d="M12.468 0.123c-3.568 0.339-6.955 2.155-9.341 5.016-1.614 1.924-2.58 4.058-2.948 6.501-0.245 1.629-0.086 4.151 0.36 5.694 0.757 2.616 2.991 5.254 5.658 6.688 1.254 0.677 2.407 1.088 4.295 1.528 1.254 0.296 1.377 0.303 0.786 0.079-2.011-0.778-4.072-2.335-5.333-4.029-0.937-1.247-1.643-2.84-1.946-4.375-0.166-0.85-0.216-2.479-0.108-3.474 0.577-5.29 4.591-10.234 9.333-11.503 1.47-0.396 3.315-0.497 4.901-0.274 1.139 0.166 2.84 0.605 3.863 1.002 0.454 0.173 0.887 0.339 0.966 0.368 0.252 0.094-0.324-0.382-1.059-0.872-1.744-1.153-4.209-2.025-6.508-2.292-0.836-0.094-2.234-0.13-2.919-0.058z">
                         </path>
@@ -230,7 +433,7 @@
                             d="M18.775 17.521c-1.067 0.151-2.191 0.649-3.005 1.326-0.512 0.418-1.088 1.088-1.268 1.456-0.065 0.13-0.13 0.238-0.151 0.238s-0.13-0.144-0.245-0.317c-0.677-1.074-2.227-1.146-3.15-0.144-0.454 0.49-0.67 1.031-0.706 1.744-0.058 1.031 0.245 1.477 1.535 2.249 1.038 0.62 1.658 1.139 2.061 1.715l0.123 0.166 0.526-0.404c0.641-0.483 1.6-0.959 3.056-1.514 1.888-0.728 2.854-1.276 3.611-2.068 0.512-0.533 0.793-1.088 0.887-1.751 0.209-1.47-0.569-2.486-2.076-2.703-0.541-0.079-0.598-0.079-1.196 0.007z">
                         </path>
                     </svg>
-                    <h1 id="title">Lanscaper Venue</h1>
+                    <h1 id="title">Wedding Hall Booking</h1>
                 </div>
             </div>
         </section>

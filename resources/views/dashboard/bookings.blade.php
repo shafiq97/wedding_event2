@@ -59,13 +59,23 @@
                                     @isset($booking->booked_at)
                                         <span class="badge bg-primary">{{ formatDateTime($booking->booked_at) }}</span>
                                     @endisset
+
                                 </div>
                             </a>
+                            <div>
+                                @isset($booking->paid_at)
+                                    @isset($booking->payment)
+                                        <a class="badge bg-success"
+                                            href="{{ route('payments.receipt', ['payment' => $booking->payment->payment_id]) }}">View
+                                            Receipt</a>
+                                    @endisset
+                                @endisset
+                            </div>
                             @if ($booking->paid_at && $review)
                                 <div class="form-group">
                                     <label for="existing_rating">{{ __('Your rating') }}</label>
-                                    <input disabled type="text" class="form-control" id="existing_rating" name="existing_rating"
-                                        value="{{ $review->rating }}" readonly>
+                                    <input disabled type="text" class="form-control" id="existing_rating"
+                                        name="existing_rating" value="{{ $review->rating }}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="existing_comment">{{ __('Your comment') }}</label>
@@ -75,7 +85,8 @@
                                     <div class="form-group">
                                         <label>{{ __('Photo') }}</label>
                                         <p class="text-align: center;">
-                                            <img src="{{ Storage::url($review->image_path) }}" width="200" alt="Image">
+                                            <img src="{{ Storage::url($review->image_path) }}" width="200"
+                                                alt="Image">
                                         </p>
                                     </div>
                                 @endif
@@ -91,8 +102,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="rating">{{ __('Rating') }}</label>
-                                        <input type="number" class="form-control" id="rating" name="rating" min="1"
-                                            max="5" required>
+                                        <input type="number" class="form-control" id="rating" name="rating"
+                                            min="1" max="5" required>
                                     </div>
                                     <div class="form-group mt-3">
                                         <label for="image">{{ __('Image') }}</label>

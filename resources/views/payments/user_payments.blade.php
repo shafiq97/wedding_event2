@@ -2,18 +2,6 @@
 
 @section('content')
     <div class="container">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Display error message -->
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
         <h1>Bookings</h1>
         <table id="bookings-table" class="table table-striped">
             <thead>
@@ -57,10 +45,9 @@
     </div>
 @endsection
 
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#bookings-table').DataTable();
-        });
-    </script>
-@endsection
+
+<script>
+    window.onload = function() {
+        $('#bookings-table').DataTable();
+    };
+</script>
