@@ -1,8 +1,8 @@
 @extends('layouts.app')
 <style>
     .container {
-        margin: 40px auto;
-        max-width: 800px;
+        /* margin: 40px auto;
+        max-width: 800px; */
         text-align: center;
     }
 

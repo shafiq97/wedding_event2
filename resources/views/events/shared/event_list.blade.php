@@ -58,74 +58,62 @@
         @foreach ($events as $service)
             @can('view', $service)
                 <div class="col-md-6 mb-3">
-                    <a href="{{ route('events.show', $service->slug) }}">
-                        <div class="card shadoq mb-3 d-flex flex-column">
-                            <div class="card-header">
-                                <div class="left">
-                                    <div class="service-info">
-                                        <h2 style="color: rgb(4, 4, 97)" class="card-title">{{ $service->name }}</h2>
-                                        <p style="color: rgb(4, 4, 97)" class="card-text">by
-                                            <a
-                                                href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
-                                        </p>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">{{ $service->name }}</h2>
+                            <p class="card-text">by <a
+                                    href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            @for ($i = 0; $i < $service->service_rating; $i++)
+                                <span class="rating-star">&#9733;</span>
+                            @endfor
+                            @for ($i = $service->service_rating; $i < 5; $i++)
+                                <span class="empty-star">&#9734;</span>
+                            @endfor
+                            <span>{{ number_format($service->service_rating, 1) }}</span>
+                            @auth
+                                <button style="background: none; border: none;"
+                                    class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
+                                    data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
+                            @endauth
+                            @if ($service->images->count() > 0)
+                                <div id="carousel{{ $service->id }}" class="carousel slide mt-2" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @foreach ($service->images as $image)
+                                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                                <img src="{{ asset('storage/' . $image->path) }}" class="card-img-top"
+                                                    alt="Image" style="height: 200px; object-fit: cover;">
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    <div>
-                                        @for ($i = 0; $i < $service->service_rating; $i++)
-                                            <span class="rating-star">&#9733;</span>
-                                        @endfor
-                                        @for ($i = $service->service_rating; $i < 5; $i++)
-                                            <span class="empty-star">&#9734;</span>
-                                        @endfor
-                                    </div>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#carousel{{ $service->id }}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#carousel{{ $service->id }}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
                                 </div>
-                                @auth
-                                    <button style="background: none; border: none;"
-                                        class="wishlist-button {{ Auth::user()->wishlist && Auth::user()->wishlist->contains($service->id) ? 'added' : '' }}"
-                                        data-service-id="{{ $service->id }}"><i class="fa fa-heart"></i></button>
-                                @endauth
-                            </div>
-                            <div class="card-body">
-                                @if ($service->images->count() > 0)
-                                    <!-- Carousel for images -->
-                                    <div id="carousel{{ $service->id }}" class="carousel slide mt-2"
-                                        data-bs-ride="carousel">
-                                        <div class="carousel-inner">
-                                            @foreach ($service->images as $image)
-                                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                                    <img src="{{ asset('storage/' . $image->path) }}" class="card-img-top"
-                                                        alt="Image" style="height: 200px; object-fit: cover;">
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <button class="carousel-control-prev" type="button"
-                                            data-bs-target="#carousel{{ $service->id }}" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                            data-bs-target="#carousel{{ $service->id }}" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
-                                    </div>
-                                @endif
-                                <!-- Description with See More functionality -->
-                                <div class="text-muted" id="description-{{ $service->id }}"></div>
-                                <a href="#" id="toggle-{{ $service->id }}"
-                                    onclick="toggleDescription('{{ $service->id }}')">Read more</a>
-                                <!-- End of Description -->
-                                <div class="text-muted">
-                                    Price from RM{{ $service->min_price }}
-                                </div>
+                            @endif
+                            <div class="text-muted" id="description-{{ $service->id }}"></div>
+                            <a href="#" id="toggle-{{ $service->id }}"
+                                onclick="toggleDescription('{{ $service->id }}')">Read more</a>
+                            <div class="text-muted">
+                                Price from RM{{ $service->min_price }}
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             @endcan
         @endforeach
-
     </div>
 @endif
+
 
 <!-- Rest of your JavaScript code... -->
 
