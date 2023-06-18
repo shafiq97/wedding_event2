@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
             ->leftJoin('images', 'venues.id', '=', 'images.venue_id')
             ->leftJoin('locations', 'venues.location_id', '=', 'locations.id')
-            ->where('venues.visibility', '=', Visibility::Public ->value)
+            ->where('venues.visibility', '=', Visibility::Public->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', 'locations.state as state')
             ->groupBy('venues.id');
 
@@ -102,7 +102,7 @@ class DashboardController extends Controller
             ->leftJoin('reviews', 'venues.id', '=', 'reviews.service_id')
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
-            ->where('venues.visibility', '=', Visibility::Public ->value)
+            ->where('venues.visibility', '=', Visibility::Public->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price')
             ->groupBy('venues.id');
 
@@ -231,7 +231,7 @@ class DashboardController extends Controller
             ->leftJoin(DB::raw('(SELECT event_id, MIN(price) AS min_price FROM booking_options GROUP BY event_id) AS bo'), 'venues.id', '=', 'bo.event_id')
             ->leftJoin('users', 'venues.user_id', '=', 'users.id')
             ->leftJoin('users as reviewer', 'reviews.user_id', '=', 'reviewer.id')
-            ->where('venues.visibility', '=', Visibility::Public ->value)
+            ->where('venues.visibility', '=', Visibility::Public->value)
             ->select('venues.*', 'users.first_name', DB::raw('COALESCE(AVG(reviews.rating), 0) as service_rating'), 'bo.min_price', DB::raw('reviewer.first_name as reviewer_first_name'))
             ->whereNotNull('reviewer.first_name')
             ->groupBy('venues.id')
@@ -281,9 +281,18 @@ class DashboardController extends Controller
             });
 
 
+        $vendors = DB::select("
+            SELECT u.id, u.first_name
+            FROM users u
+            INNER JOIN user_user_role ur ON u.id = ur.user_id
+            WHERE ur.user_role_id = :userRoleId
+        ", ['userRoleId' => 3]);
+
+        $vendors = collect($vendors)->pluck('first_name', 'id');
 
         $this->authorize('viewAny', Booking::class);
         return view('dashboard.landscaper_report', [
+            'vendors' => $vendors,
             'total_decline' => $total_decline,
             'total_accepted' => $total_accepted,
             'total_sales' => $total_sales,
@@ -293,6 +302,5 @@ class DashboardController extends Controller
             'bookings' => $bookings,
             'salesData' => $salesData
         ]);
-
     }
 }

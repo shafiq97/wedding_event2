@@ -25,6 +25,17 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Overview</h5>
+                        <!-- Dropdown filter -->
+                        <div class="mb-3">
+                            <label for="booking-filter" class="form-label">Filter by Vendor:</label>
+                            <select id="booking-filter" class="form-select">
+                                <option value="all">All</option>
+                                @foreach ($vendors as $vendorId => $vendorName)
+                                    <option value="{{ $vendorId }}">{{ $vendorName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         @php
                             $booking_counts = $bookings
                                 ->groupBy('email')
@@ -60,8 +71,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -170,4 +179,55 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingFilterSelect = document.getElementById('booking-filter');
+            const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
+            const labels = {!! json_encode(array_keys($booking_counts)) !!};
+            const data = {!! json_encode(array_values($booking_counts)) !!};
+    
+            // Update chart when the filter changes
+            bookingFilterSelect.addEventListener('change', function() {
+                const selectedVendor = this.value;
+                let filteredLabels = labels;
+                let filteredData = data;
+
+                alert('change')
+    
+                if (selectedVendor !== 'all') {
+                    filteredLabels = labels.filter(function(label, index) {
+                        // Filter labels based on the selected vendor
+                        return data[index] > 0; // Replace this condition with your own logic
+                    });
+    
+                    filteredData = data.filter(function(value, index) {
+                        // Filter data based on the selected vendor
+                        return data[index] > 0; // Replace this condition with your own logic
+                    });
+                }
+    
+                // Update chart data
+                bookingStatusChart.data.labels = filteredLabels;
+                bookingStatusChart.data.datasets[0].data = filteredData;
+                bookingStatusChart.update();
+            });
+    
+            // Create initial chart
+            new Chart(bookingStatusChart, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                    }]
+                },
+                options: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            });
+        });
+    </script>    
 @endpush
