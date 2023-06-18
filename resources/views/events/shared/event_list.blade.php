@@ -60,7 +60,10 @@
                 <div class="col-md-6 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="card-title">{{ $service->name }}</h2>
+                            <h2 class="card-title">
+                                <a href="{{ route('events.show', $service->slug) }}"
+                                    class="list-group-item list-group-item-action">{{ $service->name }}</a>
+                            </h2>
                             <p class="card-text">by <a
                                     href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
                             </p>
