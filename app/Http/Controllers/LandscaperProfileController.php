@@ -55,7 +55,7 @@ class LandscaperProfileController extends Controller
         $contact_number = '';
         $user           = User::find($request->user_id);
         if ($user) {
-            $contact_number = $user->phone;
+            $contact_number = $user->email;
         }
 
         $landscaper_id = request()->query('user_id');

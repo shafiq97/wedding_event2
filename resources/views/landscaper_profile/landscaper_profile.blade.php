@@ -31,7 +31,7 @@
 
     <h3>Information</h3>
     <h6>
-        {{ __('Contact No') }} : {{ $user_contact_number }}
+        {{ __('Email') }} : {{ $user_contact_number }}
     </h6>
     <h6>
         Provided Area
