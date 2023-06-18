@@ -29,6 +29,7 @@ use Spatie\QueryBuilder\AllowedFilter;
  * @property string $first_name
  * @property string $last_name
  * @property ?string $phone
+ * @property ?string $state
  * @property string $email
  * @property-read ?Carbon $email_verified_at
  * @property ?string $password
@@ -65,6 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'postal_code',
         'city',
         'country',
+        'state',
         'email',
         'status',
     ];
