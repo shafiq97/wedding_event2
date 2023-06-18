@@ -289,10 +289,29 @@ class DashboardController extends Controller
         ", ['userRoleId' => 3]);
 
         $vendors = collect($vendors)->pluck('first_name', 'id');
+        $vendorStats = DB::select("
+            SELECT
+                user_user_role.user_id AS id,
+                users.first_name,
+                COUNT(CASE WHEN bookings.paid_at IS NOT NULL THEN 1 END) AS total_approved,
+                COUNT(CASE WHEN bookings.paid_at IS NULL THEN 1 END) AS total_pending
+            FROM
+                bookings
+            INNER JOIN
+                venues ON bookings.venue_id = venues.id
+            INNER JOIN
+                user_user_role ON venues.user_id = user_user_role.user_id
+            INNER JOIN
+                users ON user_user_role.user_id = users.id
+            WHERE
+                user_user_role.user_role_id = 3
+            GROUP BY
+                user_user_role.user_id, users.first_name
+        ");
 
         $this->authorize('viewAny', Booking::class);
+
         return view('dashboard.landscaper_report', [
-            'vendors' => $vendors,
             'total_decline' => $total_decline,
             'total_accepted' => $total_accepted,
             'total_sales' => $total_sales,
@@ -300,7 +319,9 @@ class DashboardController extends Controller
             'chats' => $chats,
             'services' => $venues,
             'bookings' => $bookings,
-            'salesData' => $salesData
+            'salesData' => $salesData,
+            'vendors' => $vendors, // Pass the vendor names and IDs for the dropdown
+            'vendorStats' => collect($vendorStats)->keyBy('id'), // Group the vendor stats by ID for easy access in the view
         ]);
     }
 }

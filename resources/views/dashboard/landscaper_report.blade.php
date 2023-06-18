@@ -52,10 +52,10 @@
                                     <h3>Total sales: RM{{ $total_sales->total_sales }}</h3>
                                 </div>
                                 <div class="row">
-                                    <h3>Total Approve: {{ $total_accepted->total_accepted }}</h3>
+                                    <h3 id="total-approve">Total Approve: {{ $total_accepted->total_accepted }}</h3>
                                 </div>
                                 <div class="row">
-                                    <h3>Total Pending: {{ $total_decline->total_decline }}</h3>
+                                    <h3 id="total-pending">Total Pending: {{ $total_decline->total_decline }}</h3>
                                 </div>
                                 <div class="row">
                                     <h3>Average Rating:</h3>
@@ -185,33 +185,54 @@
             const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
             const labels = {!! json_encode(array_keys($booking_counts)) !!};
             const data = {!! json_encode(array_values($booking_counts)) !!};
-    
+            const vendorStats = {!! json_encode($vendorStats) !!};
+
             // Update chart when the filter changes
             bookingFilterSelect.addEventListener('change', function() {
                 const selectedVendor = this.value;
                 let filteredLabels = labels;
                 let filteredData = data;
 
-                alert('change')
-    
                 if (selectedVendor !== 'all') {
+                    // Get the total approve and total pending values for the selected vendor
+                    let totalApprove = 0;
+                    let totalPending = 0;
+                    for (const vendorId in vendorStats) {
+                        if (vendorStats.hasOwnProperty(vendorId)) {
+                            if (vendorId === selectedVendor) {
+                                totalApprove = vendorStats[vendorId].total_approved;
+                                totalPending = vendorStats[vendorId].total_pending;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Update the total approve and total pending elements
+                    document.getElementById('total-approve').textContent = 'Total Approve: ' + totalApprove;
+                    document.getElementById('total-pending').textContent = 'Total Pending: ' + totalPending;
+
+                    // Filter the labels and data based on the selected vendor
                     filteredLabels = labels.filter(function(label, index) {
-                        // Filter labels based on the selected vendor
-                        return data[index] > 0; // Replace this condition with your own logic
+                        return data[index] > 0;
                     });
-    
+
                     filteredData = data.filter(function(value, index) {
-                        // Filter data based on the selected vendor
-                        return data[index] > 0; // Replace this condition with your own logic
+                        return data[index] > 0;
                     });
+                } else {
+                    // Reset the total approve and total pending elements when "All" is selected
+                    document.getElementById('total-approve').textContent = 
+                        '{{ $total_accepted->total_accepted }}';
+                    document.getElementById('total-pending').textContent =
+                        '{{ $total_decline->total_decline }}';
                 }
-    
+
                 // Update chart data
                 bookingStatusChart.data.labels = filteredLabels;
                 bookingStatusChart.data.datasets[0].data = filteredData;
                 bookingStatusChart.update();
             });
-    
+
             // Create initial chart
             new Chart(bookingStatusChart, {
                 type: 'pie',
@@ -229,5 +250,5 @@
                 }
             });
         });
-    </script>    
+    </script>
 @endpush
