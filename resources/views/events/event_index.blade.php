@@ -81,7 +81,7 @@
                                 </div>
                             </span>
                         </x-list.item>
-                        <x-list.item>
+                        {{-- <x-list.item>
                             <span>
                                 <i class="fa fa-fw fa-sitemap"></i>
                                 {{ __('Organizations') }}
@@ -93,7 +93,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        </x-list.item>
+                        </x-list.item> --}}
                         @isset($service->eventSeries)
                             <x-list.item>
                                 <span>
