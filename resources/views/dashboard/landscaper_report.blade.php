@@ -121,20 +121,62 @@
             {{ $total_accepted->total_accepted }},
             {{ $total_decline->total_decline }}
         ];
-        new Chart(bookingStatusChart, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    backgroundColor: ['#36A2EB', '#FFCE56']
-                }]
-            },
-            options: {
-                legend: {
-                    position: 'right'
+        let chart = null;
+
+        function updateChart(selectedVendor) {
+            if (selectedVendor !== 'all') {
+                // Get the total approve and total pending values for the selected vendor
+                let totalApprove = 0;
+                let totalPending = 0;
+                const vendorStats = {!! json_encode($vendorStats) !!};
+                if (vendorStats.hasOwnProperty(selectedVendor)) {
+                    totalApprove = vendorStats[selectedVendor].total_approved;
+                    totalPending = vendorStats[selectedVendor].total_pending;
                 }
+
+                // Update the total approve and total pending elements
+                document.getElementById('total-approve').textContent = 'Total Approve: ' + totalApprove;
+                document.getElementById('total-pending').textContent = 'Total Pending: ' + totalPending;
+
+                // Filter the labels and data based on the selected vendor
+                chart.data.labels = ['Total Approve', 'Total Pending'];
+                chart.data.datasets[0].data = [totalApprove, totalPending];
+                chart.update();
+            } else {
+                // Reset the total approve and total pending elements when "All" is selected
+                document.getElementById('total-approve').textContent =
+                    '{{ $total_accepted->total_accepted }}';
+                document.getElementById('total-pending').textContent =
+                    '{{ $total_decline->total_decline }}';
+
+                // Update the chart with the initial data
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = data;
+                chart.update();
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            chart = new Chart(bookingStatusChart, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#36A2EB', '#FFCE56']
+                    }]
+                },
+                options: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            });
+
+            const bookingFilterSelect = document.getElementById('booking-filter');
+            bookingFilterSelect.addEventListener('change', function() {
+                updateChart(this.value);
+            });
         });
     </script>
 @endpush
@@ -180,78 +222,6 @@
                     }]
                 }
             }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const bookingFilterSelect = document.getElementById('booking-filter');
-            const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
-            const labels = {!! json_encode(array_keys($booking_counts)) !!};
-            const data = {!! json_encode(array_values($booking_counts)) !!};
-            const vendorStats = {!! json_encode($vendorStats) !!};
-
-            // Update chart when the filter changes
-            bookingFilterSelect.addEventListener('change', function() {
-                const selectedVendor = this.value;
-                let filteredLabels = labels;
-                let filteredData = data;
-
-                if (selectedVendor !== 'all') {
-                    // Get the total approve and total pending values for the selected vendor
-                    let totalApprove = 0;
-                    let totalPending = 0;
-                    for (const vendorId in vendorStats) {
-                        if (vendorStats.hasOwnProperty(vendorId)) {
-                            if (vendorId === selectedVendor) {
-                                totalApprove = vendorStats[vendorId].total_approved;
-                                totalPending = vendorStats[vendorId].total_pending;
-                                break;
-                            }
-                        }
-                    }
-
-                    // Update the total approve and total pending elements
-                    document.getElementById('total-approve').textContent = 'Total Approve: ' + totalApprove;
-                    document.getElementById('total-pending').textContent = 'Total Pending: ' + totalPending;
-
-                    // Filter the labels and data based on the selected vendor
-                    filteredLabels = labels.filter(function(label, index) {
-                        return data[index] > 0;
-                    });
-
-                    filteredData = data.filter(function(value, index) {
-                        return data[index] > 0;
-                    });
-                } else {
-                    // Reset the total approve and total pending elements when "All" is selected
-                    document.getElementById('total-approve').textContent =
-                        '{{ $total_accepted->total_accepted }}';
-                    document.getElementById('total-pending').textContent =
-                        '{{ $total_decline->total_decline }}';
-                }
-
-                // Update chart data
-                bookingStatusChart.data.labels = filteredLabels;
-                bookingStatusChart.data.datasets[0].data = filteredData;
-                bookingStatusChart.update();
-            });
-
-            // Create initial chart
-            new Chart(bookingStatusChart, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
-                    }]
-                },
-                options: {
-                    legend: {
-                        position: 'right'
-                    }
-                }
-            });
         });
     </script>
 @endpush

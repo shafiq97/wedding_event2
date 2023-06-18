@@ -266,8 +266,8 @@ class DashboardController extends Controller
             ])
             ->get();
 
-        $salesData = Booking::where('created_at', '>=', now()->subYear())
-            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('YEAR(created_at) as year'), DB::raw('SUM(price) as total_sales'))
+        $salesData = Booking::where('booked_date_from', '>=', now()->subYear())
+            ->select(DB::raw('MONTH(booked_date_from) as month'), DB::raw('YEAR(booked_date_from) as year'), DB::raw('SUM(price) as total_sales'))
             ->groupBy('month', 'year')
             ->orderBy('year', 'asc')
             ->orderBy('month', 'asc')
