@@ -67,7 +67,7 @@
                             </span>
                             <x-badge.counter>{{ formatInt($location->events_count) }}</x-badge.counter>
                         </x-list.item>
-                        <x-list.item>
+                        {{-- <x-list.item>
                             <span>
                                 <i class="fa fa-fw fa-sitemap"></i>
                                 <a href="{{ route('organizations.index', ['filter[location_id]' => $location->id]) }}" target="_blank">
@@ -75,7 +75,7 @@
                                 </a>
                             </span>
                             <x-badge.counter>{{ formatInt($location->organizations_count) }}</x-badge.counter>
-                        </x-list.item>
+                        </x-list.item> --}}
                     </x-list.group>
                     <div class="card-body">
                         @can('update', $location)
