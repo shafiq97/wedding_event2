@@ -66,7 +66,7 @@
                             </h2>
                             <p class="card-text">by <a
                                     href="{{ route('landscaper_profile.index', ['user_id' => $service->user_id, 'user_name' => $service->user_name]) }}">{{ $service->user_name }}</a>
-                            </p>
+                        </p>
                         </div>
                         <div class="card-body">
                             @for ($i = 0; $i < $service->service_rating; $i++)
