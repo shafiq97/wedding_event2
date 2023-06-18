@@ -116,15 +116,18 @@
 @push('scripts')
     <script>
         const bookingStatusChart = document.getElementById('booking-status-chart').getContext('2d');
-        const labels = {!! json_encode(array_keys($booking_counts)) !!};
-        const data = {!! json_encode(array_values($booking_counts)) !!};
+        const labels = ['Total Approve', 'Total Pending'];
+        const data = [
+            {{ $total_accepted->total_accepted }},
+            {{ $total_decline->total_decline }}
+        ];
         new Chart(bookingStatusChart, {
             type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: data,
-                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+                    backgroundColor: ['#36A2EB', '#FFCE56']
                 }]
             },
             options: {
@@ -221,7 +224,7 @@
                     });
                 } else {
                     // Reset the total approve and total pending elements when "All" is selected
-                    document.getElementById('total-approve').textContent = 
+                    document.getElementById('total-approve').textContent =
                         '{{ $total_accepted->total_accepted }}';
                     document.getElementById('total-pending').textContent =
                         '{{ $total_decline->total_decline }}';
