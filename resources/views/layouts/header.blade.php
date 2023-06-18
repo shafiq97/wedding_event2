@@ -6,7 +6,7 @@
                     src="https://img.freepik.com/free-vector/white-bride-silhouette_23-2147487126.jpg?w=1800&t=st=1686754860~exp=1686755460~hmac=13a31673d9c1c42d59ac8c04cfecee456d9a8a3d356fcbb5e982a9f22644ffa6"
                     alt="">
             </div>
-            <a class="navbar-brand ms-3" href="{{ route('dashboard') }}">
+            <a class="navbar-brand ms-3" href="{{ route('home') }}">
                 {{ config('app.name') }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
