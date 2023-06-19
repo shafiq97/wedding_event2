@@ -126,12 +126,13 @@ class BookingController extends Controller
         // Calculate the total cost
         $booking->price = $numberOfDays * $bookingOption->price;
 
-        if($request->input('booked_date_until') > $bookingOption->available_until){
+        if ($request->input('booked_date_until') > $bookingOption->available_until) {
             $message = __('Please choose date in the booking period.');
             Session::flash('error', $message);
-        }
-
-        else if ($booking->fillAndSave($request->validated())) {
+        } else if ($request->input('booked_date_from') < $bookingOption->available_from) {
+            $message = __('Please choose date in the booking period.');
+            Session::flash('error', $message);
+        } else if ($booking->fillAndSave($request->validated())) {
             $message = __('Your booking has been saved successfully.')
                 . ' ' . __('We will send you a confirmation by e-mail shortly.');
             Session::flash('success', $message);

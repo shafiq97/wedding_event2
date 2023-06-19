@@ -23,7 +23,11 @@
                 </x-form.row>
                 <x-form.row>
                     <x-form.label for="email">{{ __('E-mail') }}</x-form.label>
-                    <x-form.input name="email" type="email" :value="$user->email ?? null" />
+                <x-form.input name="email" type="email" :value="$user->email ?? null" />
+                </x-form.row>
+                <x-form.row>
+                    <x-form.label for="phone">{{ __('Phone No') }}</x-form.label>
+                    <x-form.input name="phone" type="text" :value="$user->phone ?? null" />
                 </x-form.row>
                 @isset($user->email_verified_at)
                     <p class="alert alert-primary">

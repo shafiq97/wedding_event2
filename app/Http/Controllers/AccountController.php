@@ -25,6 +25,7 @@ class AccountController extends Controller
         /** @var User $user */
         $user = Auth::user();
         $user->state = $request->input('state');
+        $user->phone = $request->input('phone');
 
         if ($user->fillAndSave($request->validated())) {
             Session::flash('success', __('Saved successfully.'));
