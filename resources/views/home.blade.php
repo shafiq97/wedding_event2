@@ -13,6 +13,15 @@
         z-index: 9999;
     }
 
+    .full-width-image {
+        width: 100vw !important;
+        position: relative;
+        left: 50% !important;
+        right: 50% !important;
+        margin-left: -50vw !important;
+        margin-right: -50vw !important;
+    }
+
 
     #next-button a {
         display: block;
@@ -72,14 +81,13 @@
     .section {
         position: fixed;
         width: 100%;
-        height: 100%;
-        top: 100px;
+        height: 100vh;
+        top: 0;
         left: 0;
         animation: 1s linear;
-        /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); */
-        background-size: cover;
+        background-size: 100%;
+        /* This line was updated */
         background-repeat: no-repeat;
-        background-position: center center;
     }
 
     .section:nth-child(1) {
@@ -183,7 +191,7 @@
     }
 </style>
 @section('content')
-    <div id="homepage">
+    <div id="homepage" class="full-width-image">
         <section id="landing" class="background section">
             <div class="content-wrapper bgpaper centered">
                 <div class="logo">
@@ -237,6 +245,12 @@
             </div>
         </section>
     </div>
+    <div id="next-button">
+        <a href="{{ route('login') }}" class="btn btn-default">Find your wedding hall now!</a>
+    </div>
+@endsection
+
+@section('scripts')
     <script
         src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js">
     </script>
@@ -284,8 +298,4 @@
         });
         //# sourceURL=pen.js
     </script>
-
-    <div id="next-button">
-        <a href="{{ route('login') }}" class="btn btn-default">Find your wedding hall now!</a>
-    </div>
 @endsection

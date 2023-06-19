@@ -37,7 +37,6 @@
 
         <main class="mx-5 my-3">
             @include('layouts.alerts')
-
             @section('main')
                 @hasSection('headline-buttons')
                     <div class="hstack gap-3">
